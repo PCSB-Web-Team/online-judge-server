@@ -1,5 +1,8 @@
 const express = require("express");
 const authRoutes = require('./routers/authRoutes');
+const cookieParser = require("cookie-parser");
+const { validateToken } = require("./middlewares/jwt"); 
+const jwt_decode = require("jwt-decode");
 
 const app = express();
 
@@ -9,6 +12,15 @@ app.use(                //this mean we don't need to use body-parser anymore
     extended: true,
   })
 );
+app.use(cookieParser());
+
+app.get("/profile", validateToken, (req, res) => {
+
+  var token = req.cookies["access-token"];
+  var decoded = jwt_decode(token);
+  res.json({email: decoded.email, userID: decoded.id});
+
+});
 
 app.use(authRoutes);
 

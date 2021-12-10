@@ -1,8 +1,7 @@
 const User = require("../models/User");
+const { createTokens, validateToken } = require("../middlewares/jwt"); 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = 'sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk'
-
 
 module.exports.login_get = (req, res)=>{
     console.log("Login Page Up");
@@ -18,21 +17,25 @@ module.exports.login_post = async (req, res) =>{
 		return res.json({ status: 'error', error: 'Invalid username/password' })
 	}
 
-	if (await bcrypt.compare(textPassword, user.password)) {
-		// the username, password combination is successful
+	bcrypt.compare(textPassword, user.password).then((match) => {
+		if (!match) {
 
-		const token = jwt.sign(
-			{
-				id: user._id,
-				email: user.email
-			},
-			JWT_SECRET
-		)
+		  res
+			.status(400)
+			.json({ error: "Wrong Username and Password Combination!" });
 
-		return res.json({ status: 'ok', data: token })
-	}
+		} else {
 
-	res.json({ status: 'error', error: 'Invalid username/password' })
+			const accessToken = createTokens(user);
+	
+		  	res.cookie("access-token", accessToken, {
+				maxAge: 60 * 60 * 24 * 30 * 1000,
+				httpOnly: true,
+		  	});
+	
+		  res.json("LOGGED IN");
+		}
+	  });
 }
 
 module.exports.signup_get = (req, res)=>{
@@ -60,8 +63,16 @@ module.exports.signup_post = async (req, res) => {
 
     const password = await bcrypt.hash(textPassword, 10);
     try {
-      const user = await User.create({ email, password });
-      console.log('User created successfully: ', user)
+      	const user = await User.create({ email, password });
+		
+      	const accessToken = createTokens(user);
+	
+		res.cookie("access-token", accessToken, {
+			maxAge: 60 * 60 * 24 * 30 * 1000,
+			httpOnly: true,
+		});
+	
+		res.json("REGISTERED AND LOGGED IN");
     }
     catch(err) {
         if (err.code === 11000) {
