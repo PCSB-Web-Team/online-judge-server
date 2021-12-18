@@ -1,4 +1,3 @@
-var conn = require("../db/mongoose");
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({

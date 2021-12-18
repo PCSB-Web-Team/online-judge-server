@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 
-const UserDB = "mongodb://localhost:27017/UserDB";
+const mongoUri = "mongodb+srv://vedant:vedant123@main.qdfxr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
-mongoose.connect(UserDB, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(mongoUri, {useNewUrlParser: true, useUnifiedTopology: true}).then(res => {
+    console.log("MongoDB Connected");
+});
 
 module.exports=mongoose;
