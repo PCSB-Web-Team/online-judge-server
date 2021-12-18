@@ -1,5 +1,4 @@
 const express = require("express");
-const authRoutes = require("./routers/authRoutes");
 const cookieParser = require("cookie-parser");
 const { validateToken } = require("./middlewares/jwt");
 const jwt_decode = require("jwt-decode");
@@ -23,13 +22,13 @@ app.get("/profile", validateToken, (req, res) => {
   res.json({ email: decoded.email, userID: decoded.id });
 });
 
-app.use(Router);
+app.use('/api', Router);
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 3000;
+  port = 5000;
 }
 
 app.listen(port, function () {
-  console.log("Server started");
+  console.log("Server is up and running at port:", port);
 });

@@ -1,16 +1,22 @@
-const Contest = require("../models/contest");
+const Contest = require("../models/contest.model");
 const mongoose = require("mongoose");
 
 // new contest
 async function NewContest(req, res) {
-  const { title, description } = req.body;
+  const { title, startsOn, endsOn } = req.body;
 
-  if (title && description) {
-    const newContest = Contest.create({ title, description });
+  console.log("Creating");
 
-    res.send(newContest);
-  } else {
-    res.status(400).send("Unable to create the contest");
+  try{
+    if (title && startsOn && endsOn) {
+        const newContest = await Contest.create({ title, startsOn, endsOn });
+        res.send(newContest);
+      } else {
+        res.status(400).send("Unable to create the contest");
+      }
+  }
+  catch(err){
+      res.status(400).send("An error occured")
   }
 }
 
