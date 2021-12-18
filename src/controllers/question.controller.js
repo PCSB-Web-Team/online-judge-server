@@ -16,4 +16,9 @@ async function newQuestion(req, res) {
   }
 }
 
+// Aryan - create a get route that will return all the questions
+
+// Aryan - create a get route that will return all the questions of a particular contest 
+// (accept the contest _id via params)
+
 module.exports  = {newQuestion}
