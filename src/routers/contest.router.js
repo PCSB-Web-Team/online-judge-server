@@ -1,7 +1,7 @@
-const { NewContest, GetAllContest } = require("../controllers/contest");
+const { newContest, getAllContest } = require("../controllers/contest.controller");
 const ContestRouter = require("express").Router();
 
-ContestRouter.post("/", NewContest);
-ContestRouter.get("/", GetAllContest);
+ContestRouter.post("/", newContest);
+ContestRouter.get("/", getAllContest);
 
 module.exports = ContestRouter;

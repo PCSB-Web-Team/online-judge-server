@@ -1,4 +1,5 @@
 const express = require("express");
+const dotenv = require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const { validateToken } = require("./middlewares/jwt");
 const jwt_decode = require("jwt-decode");
@@ -22,7 +23,7 @@ app.get("/profile", validateToken, (req, res) => {
   res.json({ email: decoded.email, userID: decoded.id });
 });
 
-app.use('/api', Router);
+app.use("/api", Router);
 
 let port = process.env.PORT;
 if (port == null || port == "") {

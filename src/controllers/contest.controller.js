@@ -2,7 +2,7 @@ const Contest = require("../models/contest.model");
 const mongoose = require("mongoose");
 
 // new contest
-async function NewContest(req, res) {
+async function newContest(req, res) {
   const { title, startsOn, endsOn } = req.body;
 
   console.log("Creating");
@@ -22,7 +22,7 @@ async function NewContest(req, res) {
 }
 
 //get all contest
-async function GetAllContest(req, res) {
+async function getAllContest(req, res) {
   try {
     const allContests = await Contest.find({});
     res.send(allContests);
@@ -31,4 +31,4 @@ async function GetAllContest(req, res) {
   }
 }
 
-module.exports = { NewContest, GetAllContest };
+module.exports = { newContest, getAllContest };

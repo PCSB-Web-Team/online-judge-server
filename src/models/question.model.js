@@ -11,11 +11,11 @@ const questionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    contest: mongoose.Schema.Types.ObjectId,
+    contestId: mongoose.Schema.Types.ObjectId,
   },
   { _id: true }
 );
 
-const Question = mongoose.model("question", questionSchema);
+const QuestionModel = mongoose.model("question", questionSchema);
 
-module.exports = Question;
+module.exports = QuestionModel;
