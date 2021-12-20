@@ -16,9 +16,24 @@ async function newQuestion(req, res) {
   }
 }
 
-// Aryan - create a get route that will return all the questions
 
-// Aryan - create a get route that will return all the questions of a particular contest 
-// (accept the contest _id via params)
+async function getAllQuestions(req, res) {
+  try {
+    const allQuestions = await Question.find({});
+    res.send(allQuestions);
+  } catch (err) {
+    res.status(404).send(err.message);
+  }
+}
 
-module.exports  = {newQuestion}
+
+async function contestQuestions(req, res) {
+  try {
+    const contestQuestions = await Question.find({contestId:req.query.contestid});
+    res.send(contestQuestions);
+  } catch (err) {
+    res.status(404).send(err.message);
+  }
+}
+
+module.exports  = {newQuestion, getAllQuestions, contestQuestions}
