@@ -6,7 +6,7 @@ const Router = require("express").Router();
 Router.get("", (req, res) => {
   res.send("Welcome to Online Judge");
 });
-Router.use("", auth);
+Router.use("/auth", auth);
 Router.use("/contest", ContestRouter);
 Router.use('/question', QuestionRouter);
 

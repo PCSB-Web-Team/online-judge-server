@@ -2,12 +2,13 @@ const User = require("../models/user");
 const { createTokens, validateToken } = require("../middlewares/jwt");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const jwt_decode = require("jwt-decode");
 
-module.exports.login_get = (req, res) => {
+async function login_get(req, res) {
   console.log("Login Page Up");
 };
 
-module.exports.login_post = async (req, res) => {
+async function login_post(req, res) {
   const email = req.body.email;
   const textPassword = req.body.password;
 
@@ -30,16 +31,16 @@ module.exports.login_post = async (req, res) => {
         httpOnly: true,
       });
 
-      res.json("LOGGED IN");
+      res.json({status: "LOGGED IN", token: accessToken});
     }
   });
 };
 
-module.exports.signup_get = (req, res) => {
+async function signup_get(req, res) {
   console.log("SignUp Page Up");
 };
 
-module.exports.signup_post = async (req, res) => {
+async function signup_post(req, res){
   const email = req.body.email;
   const textPassword = req.body.password;
 
@@ -69,7 +70,7 @@ module.exports.signup_post = async (req, res) => {
       httpOnly: true,
     });
 
-    res.json("REGISTERED AND LOGGED IN");
+    res.json({status: "REGISTERED AND LOGGED IN", token: accessToken});
   } catch (err) {
     if (err.code === 11000) {
       // duplicate key
@@ -78,3 +79,12 @@ module.exports.signup_post = async (req, res) => {
     throw err;
   }
 };
+
+
+async function profile_get(req, res) {
+  var token = req.cookies["access-token"];
+  var decoded = jwt_decode(token);
+  res.json({ email: decoded.email, userID: decoded.id });
+};
+
+module.exports = { login_get, login_post, signup_get, signup_post, profile_get };
