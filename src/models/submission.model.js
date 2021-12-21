@@ -15,7 +15,7 @@ const SubmissionSchema = new mongoose.Schema(
       required: true,
     },
     code: {
-      type: Number,
+      type: String,
       required: true,
     },
     score: {
