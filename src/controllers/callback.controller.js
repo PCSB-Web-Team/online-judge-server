@@ -7,7 +7,7 @@ async function callBackHandler(req, res) {
     res.send("success");
   }
   catch(err){
-      res.status(400).send('An Error Occured')
+      res.status(400).json({...req})
   }
 
 }
