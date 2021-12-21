@@ -16,7 +16,7 @@ async function newQuestion(req, res) {
   }
 }
 
-
+//show all questions
 async function getAllQuestions(req, res) {
   try {
     const allQuestions = await Question.find({});
@@ -26,7 +26,7 @@ async function getAllQuestions(req, res) {
   }
 }
 
-
+//show all questions of a contest by contest_id
 async function contestQuestions(req, res) {
   try {
     const contestQuestions = await Question.find({contestId:req.query.contestid});
