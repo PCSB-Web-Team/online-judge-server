@@ -2,9 +2,14 @@ const mongoose = require("mongoose");
 const callBackModel = require("../models/callback.model");
 
 async function callBackHandler(req, res) {
-  console.log(req.body);
-  await callBackModel.create({ ...req.body });
-  res.send("success");
+  try{
+    await callBackModel.create({ ...req.body });
+    res.send("success");
+  }
+  catch(err){
+      res.status(400).send('An Error Occured')
+  }
+
 }
 
 async function callBackTester(req, res) {
