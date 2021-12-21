@@ -3,11 +3,11 @@ const callBackModel = require("../models/callback.model");
 
 async function callBackHandler(req, res) {
   try{
-    await callBackModel.create({ ...req.body });
+    await callBackModel.create(req.body);
     res.send("success");
   }
   catch(err){
-      res.status(400).json({...req})
+      res.status(400).json(req.body)
   }
 
 }
