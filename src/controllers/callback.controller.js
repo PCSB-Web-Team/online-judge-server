@@ -7,7 +7,7 @@ async function callBackHandler(req, res) {
     const updateData = await callBackModel.create({ status_id: status_id });
     res.send("success");
   } catch (err) {
-    res.status(400).json(req.body);
+    res.status(400).send(err.message);
   }
 }
 
