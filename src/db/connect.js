@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const mongoUri = "mongodb+srv://vedant:vedant123@main.qdfxr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const mongoUri = process.env.mongoURI;
 
 mongoose
   .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
