@@ -4,7 +4,7 @@ const callBackModel = require("../models/callback.model");
 async function callBackHandler(req, res) {
   try {
     const { status_id } = req.body;
-    const updateData = await callBackModel.create({ status_id: status_id });
+    const updateData = await callBackModel.create({ body: req.body });
     res.send("success");
   } catch (err) {
     res.status(400).send(err.message);
