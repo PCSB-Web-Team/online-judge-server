@@ -1,12 +1,12 @@
 const Submission = require("../models/submission.model");
 const mongoose = require("mongoose");
-var axios = require("axios")
+const axios = require("axios")
 
 
 async function submission(req, res) {
     const { languageId, code, userId, questionId } = req.body;
-
-    var options = {
+    try {
+    let result = await axios({
         method: 'POST',
         url: 'https://judge0-ce.p.rapidapi.com/submissions',
         params: {base64_encoded: 'true', fields: '*'},
@@ -19,9 +19,8 @@ async function submission(req, res) {
           language_id: languageId,
           source_code: code
         }
-      };
-      axios.request(options).then(async function (response) {
-        token = response.data.token;
+      });
+        token = result.data.token;
 
         const newSubmission = await Submission.create({
             userId,
@@ -31,9 +30,9 @@ async function submission(req, res) {
             token
         });
         res.send(newSubmission);
-    }).catch(function (error) {
-        console.error(error);
-    }); 
+    } catch (err) {
+        res.status(400).send(err.message);
+        }
 }    
     
 module.exports  = {submission}
