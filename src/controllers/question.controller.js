@@ -28,8 +28,9 @@ async function getAllQuestions(req, res) {
 
 //show all questions of a contest by contest_id
 async function contestQuestions(req, res) {
+  console.log(req.params.contestid)
   try {
-    const contestQuestions = await Question.find({contestId:req.query.contestid});
+    const contestQuestions = await Question.find({contestId: req.params.contestid});
     res.send(contestQuestions);
   } catch (err) {
     res.status(404).send(err.message);

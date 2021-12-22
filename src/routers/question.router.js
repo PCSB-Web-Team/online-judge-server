@@ -3,7 +3,7 @@ const { newQuestion, getAllQuestions, contestQuestions } = require("../controlle
 const QuestionRouter = require("express").Router();
 
 QuestionRouter.post("/", newQuestion);
-QuestionRouter.get("/", getAllQuestions);
-QuestionRouter.get("/contestQuestion", contestQuestions);
+QuestionRouter.get("/all", getAllQuestions);
+QuestionRouter.get("/:contestid", contestQuestions);
 
 module.exports = QuestionRouter;
