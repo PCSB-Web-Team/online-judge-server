@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const SubmissionSchema = new mongoose.Schema(
+const submissionSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.SchemaTypes.ObjectId,
@@ -22,6 +22,10 @@ const SubmissionSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    token: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       default: "Processing",
@@ -29,3 +33,8 @@ const SubmissionSchema = new mongoose.Schema(
   },
   { _id: true }
 );
+
+
+const SubmissionModel = mongoose.model("submission", submissionSchema);
+
+module.exports = SubmissionModel;
