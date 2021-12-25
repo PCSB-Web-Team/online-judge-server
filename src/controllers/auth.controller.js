@@ -80,7 +80,6 @@ async function signup_post(req, res){
   }
 };
 
-
 async function profile_get(req, res) {
   var token = req.cookies["access-token"];
   var decoded = jwt_decode(token);
