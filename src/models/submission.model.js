@@ -31,7 +31,7 @@ const submissionSchema = new mongoose.Schema(
       description: { type: String, default: "Processing" },
     },
   },
-  { _id: true }
+  { _id: true, strict: false }
 );
 
 const SubmissionModel = mongoose.model("submission", submissionSchema);
