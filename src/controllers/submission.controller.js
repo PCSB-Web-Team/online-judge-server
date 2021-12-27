@@ -2,7 +2,12 @@ const Submission = require("../models/submission.model");
 const mongoose = require("mongoose");
 const axios = require("axios");
 
+// This is where Judge0 will send back the status of code execution
 const callBackURL = "https://pcsb-online-judge.herokuapp.com/api/callback";
+
+// Create Submission by sending Judge0 with source_code, language_id and callback_url
+// Token received back from Judge0 is stored along with code and other important ids
+// NOTE: Judge0 sends code execution status on callback_url having PUT request in router
 
 async function submission(req, res) {
   const { languageId, code, userId, questionId } = req.body;
@@ -31,19 +36,28 @@ async function submission(req, res) {
       code,
       token,
     });
-    res.send(newSubmission);
+
+    if (newSubmission) {
+      res.send(newSubmission);
+    } else {
+      res.status(409).send("New Submission cannot be created");
+    }
   } catch (err) {
     res.status(400).send(err.message);
   }
 }
 
-// TODO - Aryan - Create a get route for submission that will return the submission data based on the token sent from frontend
-// the api route should be GET - /submission/:token
+// Get submission if exists using ./submission/:token
 
 async function getSubmission(req, res) {
   try {
     const submission = await Submission.findOne({ token: req.params.token });
-    res.send(submission);
+
+    if (submission) {
+      res.send(submission);
+    } else {
+      res.status(404).send("No submissions exists with such token");
+    }
   } catch (err) {
     res.status(400).send(err.message);
   }
