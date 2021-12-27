@@ -40,4 +40,13 @@ async function submission(req, res) {
 // TODO - Aryan - Create a get route for submission that will return the submission data based on the token sent from frontend
 // the api route should be GET - /submission/:token
 
-module.exports = { submission };
+async function getSubmission(req, res) {
+  try {
+    const submission = await Submission.findOne({ token: req.params.token });
+    res.send(submission);
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
+
+module.exports = { submission, getSubmission };
