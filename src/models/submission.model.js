@@ -27,13 +27,12 @@ const submissionSchema = new mongoose.Schema(
       required: true,
     },
     status: {
-      type: String,
-      default: "Processing",
+      id: { type: String, default: 0 },
+      description: { type: String, default: "Processing" },
     },
   },
   { _id: true }
 );
-
 
 const SubmissionModel = mongoose.model("submission", submissionSchema);
 
