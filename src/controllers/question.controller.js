@@ -1,6 +1,7 @@
 const Question = require("../models/question.model");
 
-// create question
+// Create a new question
+
 async function newQuestion(req, res) {
   const { title, description, contestId } = req.body;
 
@@ -16,7 +17,8 @@ async function newQuestion(req, res) {
   }
 }
 
-//show all questions
+// Get all questions from every contest
+
 async function getAllQuestions(req, res) {
   try {
     const allQuestions = await Question.find({});
@@ -26,15 +28,17 @@ async function getAllQuestions(req, res) {
   }
 }
 
-//show all questions of a contest by contest_id
+// Get all questions of a contest if exists using ./question/:contestid
+
 async function contestQuestions(req, res) {
-  console.log(req.params.contestid)
   try {
-    const contestQuestions = await Question.find({contestId: req.params.contestid});
+    const contestQuestions = await Question.find({
+      contestId: req.params.contestid,
+    });
     res.send(contestQuestions);
   } catch (err) {
     res.status(404).send(err.message);
   }
 }
 
-module.exports  = {newQuestion, getAllQuestions, contestQuestions}
+module.exports = { newQuestion, getAllQuestions, contestQuestions };
