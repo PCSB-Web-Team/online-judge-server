@@ -6,7 +6,7 @@ const jwt_decode = require("jwt-decode");
 
 async function login_get(req, res) {
   console.log("Login Page Up");
-};
+}
 
 async function login_post(req, res) {
   const email = req.body.email;
@@ -31,16 +31,16 @@ async function login_post(req, res) {
         httpOnly: true,
       });
 
-      res.json({status: "LOGGED IN", token: accessToken});
+      res.json({ status: "LOGGED IN", token: accessToken });
     }
   });
-};
+}
 
 async function signup_get(req, res) {
   console.log("SignUp Page Up");
-};
+}
 
-async function signup_post(req, res){
+async function signup_post(req, res) {
   const email = req.body.email;
   const textPassword = req.body.password;
 
@@ -70,7 +70,7 @@ async function signup_post(req, res){
       httpOnly: true,
     });
 
-    res.json({status: "REGISTERED AND LOGGED IN", token: accessToken});
+    res.json({ status: "REGISTERED AND LOGGED IN", token: accessToken });
   } catch (err) {
     if (err.code === 11000) {
       // duplicate key
@@ -78,12 +78,18 @@ async function signup_post(req, res){
     }
     throw err;
   }
-};
+}
 
 async function profile_get(req, res) {
   var token = req.cookies["access-token"];
   var decoded = jwt_decode(token);
   res.json({ email: decoded.email, userID: decoded.id });
-};
+}
 
-module.exports = { login_get, login_post, signup_get, signup_post, profile_get };
+module.exports = {
+  login_get,
+  login_post,
+  signup_get,
+  signup_post,
+  profile_get,
+};

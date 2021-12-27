@@ -37,6 +37,7 @@ async function submission(req, res) {
   }
 }
 
-// TODO -
+// TODO - Aryan - Create a get route for submission that will return the submission data based on the token sent from frontend
+// the api route should be GET - /submission/:token
 
 module.exports = { submission };
