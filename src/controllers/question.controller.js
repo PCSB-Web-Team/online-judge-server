@@ -22,7 +22,12 @@ async function newQuestion(req, res) {
 async function getAllQuestions(req, res) {
   try {
     const allQuestions = await Question.find({});
-    res.send(allQuestions);
+
+    if (contestQuestions.length === 0) {
+      res.status(404).send("No questions available to solve");
+    } else {
+      res.send(allQuestions);
+    }
   } catch (err) {
     res.status(404).send(err.message);
   }
@@ -35,7 +40,11 @@ async function contestQuestions(req, res) {
     const contestQuestions = await Question.find({
       contestId: req.params.contestid,
     });
-    res.send(contestQuestions);
+    if (contestQuestions.length === 0) {
+      res.status(404).send("No questions exist with this contestid");
+    } else {
+      res.send(contestQuestions);
+    }
   } catch (err) {
     res.status(404).send(err.message);
   }
