@@ -23,7 +23,7 @@ async function getAllQuestions(req, res) {
   try {
     const allQuestions = await Question.find({});
 
-    if (contestQuestions.length === 0) {
+    if (allQuestions.length === 0) {
       res.status(404).send("No questions available to solve");
     } else {
       res.send(allQuestions);

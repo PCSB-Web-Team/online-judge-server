@@ -1,7 +1,8 @@
 const Contest = require("../models/contest.model");
 const mongoose = require("mongoose");
 
-// new contest
+// Create a new Contest
+
 async function newContest(req, res) {
   const { title, startsOn, endsOn } = req.body;
 
@@ -21,11 +22,16 @@ async function newContest(req, res) {
   }
 }
 
-//get all contest
+// Get all active contest
+
 async function getAllContest(req, res) {
   try {
     const allContests = await Contest.find({});
-    res.send(allContests);
+    if (allContests.length === 0) {
+      res.status(404).send("No active contest at the moment");
+    } else {
+      res.send(allContests);
+    }
   } catch (err) {
     res.status(404).send(err.message);
   }
