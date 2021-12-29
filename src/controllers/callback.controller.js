@@ -47,4 +47,12 @@ async function callBackHandler(req, res) {
   }
 }
 
+// this is just a testing api that is used to check the response Judge0 sends on callback uri
+async function callBackTester(req, res) {
+  const { token } = req.body;
+
+  // update or insert if not present
+  await callBackModel.updateOne({ token }, req.body, { upsert: true });
+}
+
 module.exports = { callBackHandler };
