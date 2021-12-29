@@ -21,7 +21,7 @@ async function callBackHandler(req, res) {
   const receivedData = req.body;
   token = receivedData.token;
   try {
-    await callBackModel.create({ body: { message: "Callback Hit" } });
+    await callBackModel.create({ body: req.body });
 
     const newState = await SubmissionModel.updateOne(
       { token: token },
