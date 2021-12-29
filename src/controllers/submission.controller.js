@@ -1,5 +1,4 @@
 const Submission = require("../models/submission.model");
-const mongoose = require("mongoose");
 const axios = require("axios");
 
 // This is where Judge0 will send back the status of code execution
@@ -63,4 +62,15 @@ async function getSubmission(req, res) {
   }
 }
 
-module.exports = { submission, getSubmission };
+// get all submissions
+
+async function getAllSubmissions(req, res) {
+  try {
+    const list = await Submission.find({});
+    res.send(list);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+}
+
+module.exports = { submission, getSubmission, getAllSubmissions };
