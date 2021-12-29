@@ -18,15 +18,29 @@ const axios = require("axios");
 // };
 
 async function callBackHandler(req, res) {
-  const updatedData = req.body;
-  token = updatedData.token;
+  const receivedData = req.body;
+  token = receivedData.token;
   try {
-    const initialState = await SubmissionModel.find({ token: token });
     const newState = await SubmissionModel.updateOne(
       { token: token },
-      { ...initialState, ...updatedData }
+      {
+        $set: {
+          stdout: receivedData.stdout,
+          time: receivedData.time,
+          memory: receivedData.memory,
+          stderr: receivedData.stderr,
+          compile_output: receivedData.compile_output,
+          message: receivedData.message,
+          status: receivedData.status,
+        },
+      }
     );
-    res.send(newState);
+    if (newState.matchedCount == 1) {
+      const updatedState = await SubmissionModel.findOne({ token: token });
+      res.send(updatedState);
+    } else {
+      res.status(404).send("Request not accepted");
+    }
   } catch (err) {
     res.status(400).send(err.message);
   }

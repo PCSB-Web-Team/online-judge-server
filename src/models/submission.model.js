@@ -26,9 +26,9 @@ const submissionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    stout: {
+    stdout: {
       type: String,
-      default: "null",
+      default: null,
     },
     time: {
       type: mongoose.Types.Decimal128,
@@ -40,15 +40,15 @@ const submissionSchema = new mongoose.Schema(
     },
     stderr: {
       type: String,
-      default: "null",
+      default: null,
     },
     compile_output: {
       type: String,
-      default: "null",
+      default: null,
     },
     message: {
       type: String,
-      default: "null",
+      default: null,
     },
     status: {
       id: { type: String, default: 0 },
