@@ -19,8 +19,8 @@ const axios = require("axios");
 
 async function callBackHandler(req, res) {
 
-  await callBackModel.create({ body: err.message });
-  
+  await callBackModel.create({ body: {message: "Callback Hit"} });
+
   const receivedData = req.body;
   token = receivedData.token;
   try {
