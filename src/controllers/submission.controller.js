@@ -2,7 +2,7 @@ const Submission = require("../models/submission.model");
 const axios = require("axios");
 
 // This is where Judge0 will send back the status of code execution
-const callBackURL = "https://pcsb-online-judge.herokuapp.com/api/callback";
+const callBackURL = "https://online-judge-csi.herokuapp.com/api/callback";
 
 // Create Submission by sending Judge0 with source_code, language_id and callback_url
 // Token received back from Judge0 is stored along with code and other important ids

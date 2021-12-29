@@ -18,12 +18,11 @@ const axios = require("axios");
 // Note: Data received here is through PUT request on ./callback/ by Judge0
 
 async function callBackHandler(req, res) {
-
-  await callBackModel.create({ body: {message: "Callback Hit"} });
-
   const receivedData = req.body;
   token = receivedData.token;
   try {
+    await callBackModel.create({ body: { message: "Callback Hit" } });
+
     const newState = await SubmissionModel.updateOne(
       { token: token },
       {
