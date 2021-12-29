@@ -45,7 +45,7 @@ async function callBackHandler(req, res) {
       res.status(404).send("Request not accepted");
     }
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send("Error: " + err.message);
   }
 }
 
