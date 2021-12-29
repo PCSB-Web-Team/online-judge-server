@@ -3,9 +3,6 @@ const callBackModel = require("../models/callback.model");
 const SubmissionModel = require("../models/submission.model");
 const axios = require("axios");
 
-// TODO -Aryan - modify this callback controller, where Judge0 will hit with a submission body (checkout the body structure in commented code below ),
-//  using the token present in body find and update the submission document, also add other fields that are provided by Judge0
-
 // const body = {
 //   stdout: "aGVsbG8sIEp1ZGdlMAo=\n",
 //   time: "0.002",
@@ -16,6 +13,9 @@ const axios = require("axios");
 //   message: null,
 //   status: { id: { $numberInt: "3" }, description: "Accepted" },
 // };
+
+// Receive data from Judge0 and update it in database
+// Note: Data received here is through PUT request on ./callback/ by Judge0
 
 async function callBackHandler(req, res) {
   const receivedData = req.body;
