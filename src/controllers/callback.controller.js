@@ -32,7 +32,8 @@ async function callBackHandler(req, res) {
           compile_output: receivedData.compile_output,
           message: receivedData.message,
           status: receivedData.status,
-          score: receivedData.score,
+          callBackHit: true,
+
         },
       }
     );

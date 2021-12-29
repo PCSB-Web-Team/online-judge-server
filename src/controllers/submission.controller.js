@@ -14,7 +14,7 @@ async function submission(req, res) {
     let result = await axios({
       method: "POST",
       url: "https://judge0-ce.p.rapidapi.com/submissions",
-      params: { base64_encoded: "true", fields: "*" },
+      params: { base64_encoded: "false", fields: "*" },
       headers: {
         "content-type": "application/json",
         "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
