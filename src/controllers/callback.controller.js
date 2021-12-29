@@ -18,6 +18,9 @@ const axios = require("axios");
 // Note: Data received here is through PUT request on ./callback/ by Judge0
 
 async function callBackHandler(req, res) {
+
+  await callBackModel.create({ body: err.message });
+  
   const receivedData = req.body;
   token = receivedData.token;
   try {
@@ -33,7 +36,6 @@ async function callBackHandler(req, res) {
           message: receivedData.message,
           status: receivedData.status,
           callBackHit: true,
-
         },
       }
     );
