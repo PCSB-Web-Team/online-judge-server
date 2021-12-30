@@ -1,8 +1,5 @@
 const { Router } = require("express");
 const {
-  login_get,
-  login_post,
-  profile_get,
   register,
   login,
 } = require("../controllers/auth.controller");
