@@ -15,8 +15,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  toke: {
+  token: {
     type: String,
+    default: null,
   },
 });
 

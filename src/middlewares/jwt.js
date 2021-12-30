@@ -1,14 +1,14 @@
-const { sign , verify } = require("jsonwebtoken");
-const JWT_SECRET = 'sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk'
+const { sign, verify } = require("jsonwebtoken");
 const jwt = require("jsonwebtoken");
 
-const createTokens = (user) => {
-    const accessToken = jwt.sign (
-        {
-            id: user._id,
-            email: user.email
-        },
-        JWT_SECRET)
+const createToken = (user) => {
+  const accessToken = jwt.sign(
+    {
+      id: user._id,
+      email: user.email,
+    },
+    process.env.JWT_SECRET
+  );
 
   return accessToken;
 };
@@ -30,4 +30,4 @@ const validateToken = (req, res, next) => {
   }
 };
 
-module.exports = { createTokens, validateToken };
+module.exports = { createToken, validateToken };
