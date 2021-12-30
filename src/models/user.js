@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-//Aryan - Add phone and name
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
+    required: true,
+  },
+  phoneNumber: {
+    type: Number,
     required: true,
   },
   token: {
