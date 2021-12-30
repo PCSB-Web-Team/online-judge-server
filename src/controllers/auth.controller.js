@@ -29,9 +29,9 @@ async function login(req, res) {
 // Register
 async function register(req, res) {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phoneNumber } = req.body;
 
-    if (!name && !email && !password) {
+    if (!name && !email && !password && !phoneNumber) {
       return res.status(400).send("All fields are required");
     }
 
@@ -41,14 +41,17 @@ async function register(req, res) {
     // check if user already exists
     const checkUser = await User.findOne({ email });
 
-    console.log(checkUser);
-
     if (checkUser) {
       return res.status(400).send("User already exist for this email.");
     }
 
     // creating a user
-    const user = await User.create({ name, email, password: encyptedPassword });
+    const user = await User.create({
+      name,
+      email,
+      password: encyptedPassword,
+      phoneNumber,
+    });
 
     // register jwt token
     const token = createToken(user);
