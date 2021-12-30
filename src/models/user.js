@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 //Aryan - Add phone and name
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    default: null,
+  },
   email: {
     type: String,
     unique: true,
@@ -10,6 +14,9 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  toke: {
+    type: String,
   },
 });
 
