@@ -4,12 +4,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
 
-// login route
+// Login route
 async function login(req, res) {
   try {
     const { email, password } = req.body;
 
-    // find user
+    // Find user
     const user = await User.findOne({ email });
 
     if (!user) return res.status(404).send("User not found");
@@ -35,17 +35,17 @@ async function register(req, res) {
       return res.status(400).send("All fields are required");
     }
 
-    // encrypting password
+    // Encrypting password
     const encyptedPassword = await bcrypt.hash(password, 10);
 
-    // check if user already exists
+    // Check if user already exists
     const checkUser = await User.findOne({ email });
 
     if (checkUser) {
       return res.status(400).send("User already exist for this email.");
     }
 
-    // creating a user
+    // Creating a user
     const user = await User.create({
       name,
       email,
@@ -53,10 +53,10 @@ async function register(req, res) {
       phoneNumber,
     });
 
-    // register jwt token
+    // Register jwt token
     const token = createToken(user);
 
-    // save the token
+    // Save the token
     user.token = token;
 
     return res.status(201).json(user);
@@ -65,17 +65,23 @@ async function register(req, res) {
   }
 }
 
-async function middlewareTest(req, res) {
+// Profile - Returns the user after middleware (validateToken) is run
+async function profile(req, res) {
   try {
+    // Find user without sending password and version key (__v)
     const user = await User.findById(req.user.id).select("-password -__v");
-    res.send(user);
-  } catch (error) {
-    res.send("An error occured");
+    if (user) {
+      res.send(user);
+    } else {
+      res.status(404).send("No user exists with such id");
+    }
+  } catch (err) {
+    res.code(400).send(err.message);
   }
 }
 
 module.exports = {
   login,
   register,
-  middlewareTest,
+  profile,
 };

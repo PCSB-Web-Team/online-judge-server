@@ -1,6 +1,7 @@
 const { sign, verify } = require("jsonwebtoken");
 const jwt = require("jsonwebtoken");
 
+// Create a new token on Login / Register
 const createToken = (user) => {
   const accessToken = jwt.sign(
     {
@@ -13,10 +14,13 @@ const createToken = (user) => {
   return accessToken;
 };
 
+// Token Validation used as Middleware
 const validateToken = (req, res, next) => {
-  const token = req.headers["authorization"];
+  const authHeader = req.headers["authorization"];
+  if (!authHeader)
+    return res.status(400).json({ error: "User not Authenticated!" });
 
-  if (!token) return res.status(400).json({ error: "User not Authenticated!" });
+  const token = authHeader.split(" ")[1];
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
