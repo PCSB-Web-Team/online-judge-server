@@ -5,7 +5,7 @@ const { validateToken } = require("../middlewares/jwt");
 const authRouter = Router();
 
 authRouter.post("/login", login);
-authRouter.post("/register", register);
+authRouter.post("/signup", register);
 authRouter.get("/", validateToken, profile);
 
 module.exports = authRouter;
