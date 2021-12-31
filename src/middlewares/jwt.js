@@ -14,20 +14,17 @@ const createToken = (user) => {
 };
 
 const validateToken = (req, res, next) => {
-  const accessToken = req.cookies["access-token"];
+  const token = req.headers["authorization"];
 
-  if (!accessToken)
-    return res.status(400).json({ error: "User not Authenticated!" });
+  if (!token) return res.status(400).json({ error: "User not Authenticated!" });
 
   try {
-    const validToken = verify(accessToken, JWT_SECRET);
-    if (validToken) {
-      req.authenticated = true;
-      return next();
-    }
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
   } catch (err) {
-    return res.status(400).json({ error: err });
+    return res.status(401).send("Invalid Token");
   }
+  return next();
 };
 
 module.exports = { createToken, validateToken };

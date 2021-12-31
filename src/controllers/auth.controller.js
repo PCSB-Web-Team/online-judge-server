@@ -65,7 +65,17 @@ async function register(req, res) {
   }
 }
 
+async function middlewareTest(req, res) {
+  try {
+    const user = await User.findById(req.user.id).select("-password -__v");
+    res.send(user);
+  } catch (error) {
+    res.send("An error occured");
+  }
+}
+
 module.exports = {
   login,
   register,
+  middlewareTest,
 };
