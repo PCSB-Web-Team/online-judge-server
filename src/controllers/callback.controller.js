@@ -1,7 +1,4 @@
-const mongoose = require("mongoose");
-const callBackModel = require("../models/callback.model");
 const SubmissionModel = require("../models/submission.model");
-const axios = require("axios");
 
 // const body = {
 //   stdout: "aGVsbG8sIEp1ZGdlMAo=\n",
