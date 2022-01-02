@@ -18,30 +18,9 @@ const axios = require("axios");
 // Note: Data received here is through PUT request on ./callback/ by Judge0
 
 async function callBackHandler(req, res) {
-  const receivedData = req.body;
-  token = receivedData.token;
   try {
-    const newState = await SubmissionModel.updateOne(
-      { token: token },
-      {
-        $set: {
-          stdout: receivedData.stdout,
-          time: receivedData.time,
-          memory: receivedData.memory,
-          stderr: receivedData.stderr,
-          compile_output: receivedData.compile_output,
-          message: receivedData.message,
-          status: receivedData.status,
-          callBackHit: true,
-        },
-      }
-    );
-    if (newState.matchedCount == 1) {
-      const updatedState = await SubmissionModel.findOne({ token: token });
-      res.send(updatedState);
-    } else {
-      res.status(404).send("Request not accepted");
-    }
+    const newSubmission = await SubmissionModel.create(req.body);
+    res.json(newSubmission);
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }

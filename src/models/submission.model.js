@@ -4,19 +4,15 @@ const submissionSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.SchemaTypes.ObjectId,
-      required: true,
     },
     questionId: {
       type: mongoose.SchemaTypes.ObjectId,
-      required: true,
     },
     languageId: {
       type: Number,
-      required: true,
     },
     code: {
       type: String,
-      required: true,
     },
     score: {
       type: Number,
@@ -24,7 +20,6 @@ const submissionSchema = new mongoose.Schema(
     },
     token: {
       type: String,
-      required: true,
     },
     stdout: {
       type: String,
