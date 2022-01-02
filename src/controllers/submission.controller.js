@@ -26,15 +26,17 @@ async function submission(req, res) {
         callback_url: callBackURL,
       },
     });
+
     token = result.data.token;
 
-    const newSubmission = await Submission.create({
+    const newSubmission = await Submission.findOneAndUpdate({token}, {
       userId,
       questionId,
       languageId,
       code,
-      token,
-    });
+    }, {new: true});
+
+    console.log("Here");
 
     if (newSubmission) {
       res.send(newSubmission);
