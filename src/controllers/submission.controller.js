@@ -10,11 +10,12 @@ const callBackURL = "https://online-judge-csi.herokuapp.com/api/callback";
 
 async function submission(req, res) {
   const { languageId, code, userId, questionId } = req.body;
+
   try {
     let result = await axios({
       method: "POST",
       url: "https://judge0-ce.p.rapidapi.com/submissions",
-      params: { base64_encoded: "false", fields: "*" },
+      params: { base64_encoded: "true", fields: "*" },
       headers: {
         "content-type": "application/json",
         "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
@@ -29,6 +30,8 @@ async function submission(req, res) {
 
     token = result.data.token;
 
+    console.log(Object.keys(result));
+
     const newSubmission = await Submission.findOneAndUpdate(
       { token },
       {
@@ -36,11 +39,10 @@ async function submission(req, res) {
         questionId,
         languageId,
         code,
+        token,
       },
       { new: true }
     );
-
-    console.log("Here");
 
     if (newSubmission) {
       res.send(newSubmission);
@@ -79,4 +81,21 @@ async function getAllSubmissions(req, res) {
   }
 }
 
-module.exports = { submission, getSubmission, getAllSubmissions };
+// get user submissions
+
+async function getUserSubmissions(req, res) {
+  try {
+    const { userId } = req.params;
+    const submissions = await Submission.find({ userId });
+    res.send(submissions);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+}
+
+module.exports = {
+  submission,
+  getSubmission,
+  getAllSubmissions,
+  getUserSubmissions,
+};
