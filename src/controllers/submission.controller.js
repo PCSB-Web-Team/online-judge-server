@@ -29,12 +29,16 @@ async function submission(req, res) {
 
     token = result.data.token;
 
-    const newSubmission = await Submission.findOneAndUpdate({token}, {
-      userId,
-      questionId,
-      languageId,
-      code,
-    }, {new: true});
+    const newSubmission = await Submission.findOneAndUpdate(
+      { token },
+      {
+        userId,
+        questionId,
+        languageId,
+        code,
+      },
+      { new: true }
+    );
 
     console.log("Here");
 
