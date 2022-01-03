@@ -3,12 +3,15 @@ const Question = require("../models/question.model");
 // Create a new question
 
 async function newQuestion(req, res) {
-  const { title, description, contestId } = req.body;
+  const { title, description, time, memory, example, contestId } = req.body;
 
   try {
     const newQuestion = await Question.create({
       title,
       description,
+      time,
+      memory,
+      example,
       contestId,
     });
     res.send(newQuestion);
