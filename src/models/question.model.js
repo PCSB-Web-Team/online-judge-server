@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
 
-// TODO - Aryan
-// add the following elements to schema
-// time, memory, example: [ {input, output }, {input, output} ]
-
 const questionSchema = new mongoose.Schema(
   {
     title: {
