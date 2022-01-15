@@ -1,4 +1,5 @@
 const Submission = require("../models/submission.model");
+const Question = require("../models/question.model");
 const axios = require("axios");
 
 // This is where Judge0 will send back the status of code execution
@@ -12,6 +13,13 @@ async function submission(req, res) {
   const { languageId, code, userId, questionId } = req.body;
 
   try {
+    const encodedCode = btoa(code);
+
+    const question = await Question.findById( questionId );
+    const testCase = question.example;
+    const testInput = btoa(testCase[0].input)
+    const testOutput = btoa(testCase[0].output)
+
     let result = await axios({
       method: "POST",
       url: "https://judge0-ce.p.rapidapi.com/submissions",
@@ -23,14 +31,14 @@ async function submission(req, res) {
       },
       data: {
         language_id: languageId,
-        source_code: code,
+        source_code: encodedCode,
         callback_url: callBackURL,
+        stdin: testInput,
+        expected_output: testOutput
       },
     });
 
     token = result.data.token;
-
-    console.log(Object.keys(result));
 
     const newSubmission = await Submission.findOneAndUpdate(
       { token },
@@ -38,7 +46,9 @@ async function submission(req, res) {
         userId,
         questionId,
         languageId,
-        code,
+        code: encodedCode,
+        stdin: testInput,
+        expected_output: testOutput,
         token,
       },
       { new: true }

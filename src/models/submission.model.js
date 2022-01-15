@@ -53,6 +53,14 @@ const submissionSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    stdin: {
+      type: String,
+      default: null,
+    },
+    expected_output: {
+      type: String,
+      default: null,
+    },
   },
   { _id: true, strict: false }
 );
