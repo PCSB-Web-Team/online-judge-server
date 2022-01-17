@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  registeredContest: [
+    {
+      type: mongoose.SchemaTypes.ObjectId,
+      default: null,
+    }
+  ],
 });
 
 const User = mongoose.model("user", userSchema);
