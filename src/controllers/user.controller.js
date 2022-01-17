@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const mongoose = require("mongoose");
 
+// Register a User for Contest using userId 
 
 async function registerContest(req, res) {
     const { userId, contestId } = req.body;
