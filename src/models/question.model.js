@@ -31,6 +31,11 @@ const questionSchema = new mongoose.Schema(
       },
     ],
     contestId: mongoose.Schema.Types.ObjectId,
+    score: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
   },
   { _id: true }
 );
