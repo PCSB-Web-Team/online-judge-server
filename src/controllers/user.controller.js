@@ -23,4 +23,9 @@ async function registerContest(req, res) {
     }
   }
 
-module.exports = { registerContest };
+
+async function updateSolved(req, res) {
+
+}
+
+module.exports = { registerContest, updateSolved };

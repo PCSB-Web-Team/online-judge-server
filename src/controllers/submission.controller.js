@@ -10,7 +10,7 @@ const callBackURL = "https://online-judge-csi.herokuapp.com/api/callback";
 // NOTE: Judge0 sends code execution status on callback_url having PUT request in router
 
 async function submission(req, res) {
-  const { languageId, code, userId, questionId } = req.body;
+  const { languageId, code, userId, questionId, contestId } = req.body;
 
   try {
     const encodedCode = btoa(code);
@@ -45,6 +45,7 @@ async function submission(req, res) {
       {
         userId,
         questionId,
+        contestId,
         languageId,
         code: encodedCode,
         stdin: testInput,
@@ -55,6 +56,9 @@ async function submission(req, res) {
     );
 
     if (newSubmission) {
+
+      if (newSubmission.status)
+
       res.send(newSubmission);
     } else {
       res.status(409).send("New Submission cannot be created");
@@ -95,8 +99,8 @@ async function getAllSubmissions(req, res) {
 
 async function getUserSubmissions(req, res) {
   try {
-    const { userId } = req.params;
-    const submissions = await Submission.find({ userId });
+    const { userid } = req.params;
+    const submissions = await Submission.find({ userId: userid });
     res.send(submissions);
   } catch (err) {
     res.status(401).send(err.message);
