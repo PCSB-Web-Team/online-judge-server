@@ -58,7 +58,7 @@ async function submission(req, res) {
     if (newSubmission) {
 
       if (newSubmission.status.id==3){
-        updateSolved();
+        updateSolved(newSubmission.userId, newSubmission.contestId, newSubmission.questionId);
       }
 
       res.send(newSubmission);

@@ -24,7 +24,7 @@ async function registerContest(req, res) {
   }
 
 
-async function updateSolved(req, res) {
+const updateSolved = async function(userId, contestId, questionId) {
   
 }
 
