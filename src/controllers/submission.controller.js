@@ -1,5 +1,6 @@
 const Submission = require("../models/submission.model");
 const Question = require("../models/question.model");
+const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
 
 // This is where Judge0 will send back the status of code execution
@@ -13,12 +14,11 @@ async function submission(req, res) {
   const { languageId, code, userId, questionId, contestId } = req.body;
 
   try {
-    const encodedCode = btoa(code);
-
+    const encodedCode = Buffer.from(code).toString('base64')
     const question = await Question.findById( questionId );
     const testCase = question.example;
-    const testInput = btoa(testCase[0].input)
-    const testOutput = btoa(testCase[0].output)
+    const testInput = Buffer.from(testCase[0].input).toString('base64')
+    const testOutput = Buffer.from(testCase[0].output).toString('base64')
 
     let result = await axios({
       method: "POST",
@@ -57,7 +57,9 @@ async function submission(req, res) {
 
     if (newSubmission) {
 
-      if (newSubmission.status)
+      if (newSubmission.status.id==3){
+        updateSolved();
+      }
 
       res.send(newSubmission);
     } else {
