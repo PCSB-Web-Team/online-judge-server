@@ -10,7 +10,7 @@ async function registerContest(req, res) {
       if (userId && contestId) {
         await User.findOneAndUpdate(
             { _id: userId },
-            { $push: { "registeredContest": contestId }}
+            { $push: { registeredContest:{contestId: contestId }}}
           )
         res.send("User registered for the contest");
       } else {
