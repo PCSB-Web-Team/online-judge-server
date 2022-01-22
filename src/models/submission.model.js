@@ -5,6 +5,9 @@ const submissionSchema = new mongoose.Schema(
     userId: {
       type: mongoose.SchemaTypes.ObjectId,
     },
+    contestId: {
+      type: mongoose.SchemaTypes.ObjectId,
+    },
     questionId: {
       type: mongoose.SchemaTypes.ObjectId,
     },

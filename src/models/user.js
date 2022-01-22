@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.SchemaTypes.ObjectId,
       default: null,
+      unique: true,
     }
   ],
 });

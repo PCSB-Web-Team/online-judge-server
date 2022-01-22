@@ -1,5 +1,6 @@
 const Submission = require("../models/submission.model");
 const Question = require("../models/question.model");
+const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
 
 // This is where Judge0 will send back the status of code execution
@@ -10,15 +11,15 @@ const callBackURL = "https://online-judge-csi.herokuapp.com/api/callback";
 // NOTE: Judge0 sends code execution status on callback_url having PUT request in router
 
 async function submission(req, res) {
-  const { languageId, code, userId, questionId } = req.body;
+  const { languageId, code, userId, questionId, contestId } = req.body;
 
   try {
-    const encodedCode = btoa(code);
-
+    const encodedCode = Buffer.from(code).toString('base64')
     const question = await Question.findById( questionId );
     const testCase = question.example;
-    const testInput = btoa(testCase[0].input)
-    const testOutput = btoa(testCase[0].output)
+    const score = question.score;
+    const testInput = Buffer.from(testCase[0].input).toString('base64')
+    const testOutput = Buffer.from(testCase[0].output).toString('base64')
 
     let result = await axios({
       method: "POST",
@@ -45,6 +46,7 @@ async function submission(req, res) {
       {
         userId,
         questionId,
+        contestId,
         languageId,
         code: encodedCode,
         stdin: testInput,
@@ -55,7 +57,19 @@ async function submission(req, res) {
     );
 
     if (newSubmission) {
+
       res.send(newSubmission);
+
+      if (newSubmission.status.id==3){
+        await Submission.findOneAndUpdate(
+          { token },
+          {
+            score: score,
+          },
+          { new: true }
+        );
+      }
+      
     } else {
       res.status(409).send("New Submission cannot be created");
     }
@@ -95,8 +109,8 @@ async function getAllSubmissions(req, res) {
 
 async function getUserSubmissions(req, res) {
   try {
-    const { userId } = req.params;
-    const submissions = await Submission.find({ userId });
+    const { userid } = req.params;
+    const submissions = await Submission.find({ userId: userid });
     res.send(submissions);
   } catch (err) {
     res.status(401).send(err.message);
