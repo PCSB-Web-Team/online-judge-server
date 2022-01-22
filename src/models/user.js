@@ -25,21 +25,10 @@ const userSchema = new mongoose.Schema({
   },
   registeredContest: [
     {
-      contestId: {
-        type: mongoose.SchemaTypes.ObjectId,
-        default: null,
-      },
-      solved: {
-        type : [
-          {
-            type: mongoose.SchemaTypes.ObjectId,
-            unique: true,
-          },
-        ],
-        default: [],
-      },
-      _id : false,
-    },
+      type: mongoose.SchemaTypes.ObjectId,
+      default: null,
+      unique: true,
+    }
   ],
 });
 

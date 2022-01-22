@@ -17,6 +17,7 @@ async function submission(req, res) {
     const encodedCode = Buffer.from(code).toString('base64')
     const question = await Question.findById( questionId );
     const testCase = question.example;
+    const score = question.score;
     const testInput = Buffer.from(testCase[0].input).toString('base64')
     const testOutput = Buffer.from(testCase[0].output).toString('base64')
 
@@ -57,11 +58,18 @@ async function submission(req, res) {
 
     if (newSubmission) {
 
-      if (newSubmission.status.id==3){
-        updateSolved(newSubmission.userId, newSubmission.contestId, newSubmission.questionId);
-      }
-
       res.send(newSubmission);
+
+      if (newSubmission.status.id==3){
+        await Submission.findOneAndUpdate(
+          { token },
+          {
+            score: score,
+          },
+          { new: true }
+        );
+      }
+      
     } else {
       res.status(409).send("New Submission cannot be created");
     }
