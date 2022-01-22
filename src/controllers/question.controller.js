@@ -37,7 +37,7 @@ async function getAllQuestions(req, res) {
   }
 }
 
-// Get all questions of a contest if exists using ./question/:contestid
+// Get all questions of a contest if exists using ./question/contest/:contestid
 
 async function contestQuestions(req, res) {
   try {
@@ -54,4 +54,22 @@ async function contestQuestions(req, res) {
   }
 }
 
-module.exports = { newQuestion, getAllQuestions, contestQuestions };
+
+// Get all questions of a contest if exists using ./question/:questionid
+
+async function specificQuestion(req, res) {
+  try {
+    const getQuestion = await Question.findOne({
+      _id: req.params.questionid,
+    });
+    if (!getQuestion) {
+      res.status(404).send("No questions exist with this questionid");
+    } else {
+      res.send(getQuestion);
+    }
+  } catch (err) {
+    res.status(404).send(err.message);
+  }
+}
+
+module.exports = { newQuestion, getAllQuestions, contestQuestions, specificQuestion };
