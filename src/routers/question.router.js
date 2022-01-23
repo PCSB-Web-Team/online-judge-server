@@ -1,9 +1,10 @@
-const { newQuestion, getAllQuestions, contestQuestions } = require("../controllers/question.controller");
+const { newQuestion, getAllQuestions, contestQuestions, specificQuestion } = require("../controllers/question.controller");
 
 const QuestionRouter = require("express").Router();
 
-QuestionRouter.post("/", newQuestion);
+QuestionRouter.get("/contest/:contestid", contestQuestions);
+QuestionRouter.get("/:questionid", specificQuestion);
 QuestionRouter.get("/all", getAllQuestions);
-QuestionRouter.get("/:contestid", contestQuestions);
+QuestionRouter.post("/", newQuestion);
 
 module.exports = QuestionRouter;

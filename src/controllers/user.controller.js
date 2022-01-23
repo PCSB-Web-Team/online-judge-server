@@ -23,4 +23,5 @@ async function registerContest(req, res) {
     }
   }
 
+
 module.exports = { registerContest };
