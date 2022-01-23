@@ -3,8 +3,8 @@ const { newQuestion, getAllQuestions, contestQuestions, specificQuestion } = req
 const QuestionRouter = require("express").Router();
 
 QuestionRouter.get("/contest/:contestid", contestQuestions);
-QuestionRouter.get("/:questionid", specificQuestion);
 QuestionRouter.get("/all", getAllQuestions);
+QuestionRouter.get("/:questionid", specificQuestion);
 QuestionRouter.post("/", newQuestion);
 
 module.exports = QuestionRouter;
