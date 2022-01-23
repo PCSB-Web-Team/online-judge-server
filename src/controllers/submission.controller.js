@@ -109,8 +109,8 @@ async function getAllSubmissions(req, res) {
 
 async function getUserSubmissions(req, res) {
   try {
-    const { userid } = req.params;
-    const submissions = await Submission.find({ userId: userid });
+    const { userId } = req.params;
+    const submissions = await Submission.find({ userId: userId });
     res.send(submissions);
   } catch (err) {
     res.status(401).send(err.message);
