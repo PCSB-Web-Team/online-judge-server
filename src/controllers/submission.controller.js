@@ -15,10 +15,10 @@ async function submission(req, res) {
   try {
     const encodedCode = btoa(code);
 
-    const question = await Question.findById( questionId );
+    const question = await Question.findById(questionId);
     const testCase = question.example;
-    const testInput = btoa(testCase[0].input)
-    const testOutput = btoa(testCase[0].output)
+    const testInput = btoa(testCase[0].input);
+    const testOutput = btoa(testCase[0].output);
 
     let result = await axios({
       method: "POST",
@@ -34,7 +34,7 @@ async function submission(req, res) {
         source_code: encodedCode,
         callback_url: callBackURL,
         stdin: testInput,
-        expected_output: testOutput
+        expected_output: testOutput,
       },
     });
 
@@ -103,9 +103,22 @@ async function getUserSubmissions(req, res) {
   }
 }
 
+// get user submissions for a question
+
+async function getUserSubmissionForQuestion(req, res) {
+  try {
+    const { userId, questionId } = req.params;
+    const submissions = await Submission.find({ userId, questionId });
+    res.send(submissions);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+}
+
 module.exports = {
   submission,
   getSubmission,
   getAllSubmissions,
   getUserSubmissions,
+  getUserSubmissionForQuestion,
 };
