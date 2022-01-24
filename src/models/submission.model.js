@@ -52,10 +52,6 @@ const submissionSchema = new mongoose.Schema(
       id: { type: String, default: 0 },
       description: { type: String, default: "Processing" },
     },
-    callBackHit: {
-      type: Boolean,
-      default: false,
-    },
     stdin: {
       type: String,
       default: null,
