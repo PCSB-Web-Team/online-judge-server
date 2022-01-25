@@ -3,25 +3,17 @@ const Question = require("../models/question.model");
 const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
 
-// This is where Judge0 will send back the status of code execution
-const callBackURL = "https://online-judge-csi.herokuapp.com/api/callback";
+// Run code by sending Judge0 with source_code, language_id and sample_input (stdin)
+// Token received back from Judge0 is then used to get the output (stdout)
 
-// Create Submission by sending Judge0 with source_code, language_id and callback_url
-// Token received back from Judge0 is stored along with code and other important ids
-// NOTE: Judge0 sends code execution status on callback_url having PUT request in router
-
-async function submission(req, res) {
-  const { languageId, code, userId, questionId, contestId } = req.body;
+async function run(req, res) {
+  const { languageId, code, stdin } = req.body;
 
   try {
-    const encodedCode = Buffer.from(code).toString('base64')
-    const question = await Question.findById( questionId );
-    const testCase = question.example;
-    const score = question.score;
-    const testInput = Buffer.from(testCase[0].input).toString('base64')
-    const testOutput = Buffer.from(testCase[0].output).toString('base64')
+    const encodedStdin = Buffer.from(stdin).toString("base64");
+    const encodedCode = Buffer.from(code).toString("base64");
 
-    let result = await axios({
+    let postResult = await axios({
       method: "POST",
       url: "https://judge0-ce.p.rapidapi.com/submissions",
       params: { base64_encoded: "true", fields: "*" },
@@ -33,50 +25,39 @@ async function submission(req, res) {
       data: {
         language_id: languageId,
         source_code: encodedCode,
-        callback_url: callBackURL,
-        stdin: testInput,
-        expected_output: testOutput,
+        stdin: encodedStdin,
       },
     });
 
-    token = result.data.token;
-
-    const newSubmission = await Submission.findOneAndUpdate(
-      { token },
-      {
-        userId,
-        questionId,
-        contestId,
-        languageId,
-        code: encodedCode,
-        stdin: testInput,
-        expected_output: testOutput,
-        token,
-      },
-      { new: true }
-    );
-
-    if (newSubmission) {
-
-      res.send(newSubmission);
-
-      if (newSubmission.status.id==3){
-        await Submission.findOneAndUpdate(
-          { token },
-          {
-            score: score,
-          },
-          { new: true }
-        );
-      }
-      
-    } else {
-      res.status(409).send("New Submission cannot be created");
+    if (!postResult){
+      res.status(409).send("Run code unable to process. Try again");
     }
+
+    const token = postResult.data.token;
+
+    let getResult = await axios({
+      method: 'GET',
+      url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
+      params: {base64_encoded: 'true', fields: '*'},
+      headers: {
+        'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
+        'x-rapidapi-key': '71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a'
+      }
+    });
+
+    if (!getResult){
+      res.status(409).send("Run code unable to process. Try again");
+    }
+
+    const stdout = getResult.data.stdout
+
+    res.send(stdout)
+    
   } catch (err) {
     res.status(400).send(err.message);
   }
 }
+
 
 // Get submission if exists using ./submission/:token
 
@@ -130,7 +111,7 @@ async function getUserSubmissionForQuestion(req, res) {
 }
 
 module.exports = {
-  submission,
+  run,
   getSubmission,
   getAllSubmissions,
   getUserSubmissions,
