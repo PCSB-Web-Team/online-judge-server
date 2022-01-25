@@ -3,7 +3,6 @@ const Question = require("../models/question.model");
 const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
 
-
 // Run code by sending Judge0 with source_code, language_id and sample_input (stdin)
 // Token received back from Judge0 is then used to get the output (stdout)
 
@@ -11,54 +10,57 @@ async function run(req, res) {
   const { languageId, code, stdin } = req.body;
 
   try {
-    const encodedStdin = Buffer.from(stdin).toString("base64");
-    const encodedCode = Buffer.from(code).toString("base64");
+    if( languageId && code ){
 
-    let postResult = await axios({
-      method: "POST",
-      url: "https://judge0-ce.p.rapidapi.com/submissions",
-      params: { base64_encoded: "true", fields: "*" },
-      headers: {
-        "content-type": "application/json",
-        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-        "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
-      },
-      data: {
-        language_id: languageId,
-        source_code: encodedCode,
-        stdin: encodedStdin,
-      },
-    });
+      const encodedStdin = Buffer.from(stdin).toString("base64");
+      const encodedCode = Buffer.from(code).toString("base64");
+      
+      let postResult = await axios({
+        method: "POST",
+        url: "https://judge0-ce.p.rapidapi.com/submissions",
+        params: { base64_encoded: "true", fields: "*" },
+        headers: {
+          "content-type": "application/json",
+          "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+          "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+        },
+        data: {
+          language_id: languageId,
+          source_code: encodedCode,
+          stdin: encodedStdin,
+        },
+      });
+      
+      if (!postResult) return res.status(409).send("Run code unable to process. Try again");
+     
+      const token = postResult.data.token;
 
-    if (!postResult){
-      res.status(409).send("Run code unable to process. Try again");
+      let getResult = await axios({
+        method: "GET",
+        url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
+        params: { base64_encoded: "true", fields: "*" },
+        headers: {
+          "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+          "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+        },
+      });
+      
+      if (!getResult) return res.status(409).send("Run code unable to process. Try again");
+
+      if(!getResult.data.stdout) return res.send(null);
+      
+      const stdout = Buffer.from(getResult.data.stdout, "base64").toString(
+        "ascii"
+      );
+      
+      res.send(stdout);
+    } else {
+      res.status(400).send("Invalid data received, code or language missing");
     }
-
-    const token = postResult.data.token;
-
-    let getResult = await axios({
-      method: 'GET',
-      url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
-      params: {base64_encoded: 'true', fields: '*'},
-      headers: {
-        'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
-        'x-rapidapi-key': '71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a'
-      }
-    });
-
-    if (!getResult){
-      res.status(409).send("Run code unable to process. Try again");
-    }
-    
-    const stdout = Buffer.from(getResult.data.stdout, 'base64').toString('ascii')
-
-    res.send(stdout)
-    
   } catch (err) {
     res.status(400).send(err.message);
   }
 }
-
 
 // Get submission if exists using ./submission/:token
 
@@ -118,3 +120,4 @@ module.exports = {
   getUserSubmissions,
   getUserSubmissionForQuestion,
 };
+
