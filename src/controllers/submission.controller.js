@@ -3,6 +3,7 @@ const Question = require("../models/question.model");
 const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
 
+
 // Run code by sending Judge0 with source_code, language_id and sample_input (stdin)
 // Token received back from Judge0 is then used to get the output (stdout)
 
@@ -48,8 +49,8 @@ async function run(req, res) {
     if (!getResult){
       res.status(409).send("Run code unable to process. Try again");
     }
-
-    const stdout = getResult.data.stdout
+    
+    const stdout = Buffer.from(getResult.data.stdout, 'base64').toString('ascii')
 
     res.send(stdout)
     
