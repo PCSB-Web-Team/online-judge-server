@@ -35,19 +35,19 @@ async function callBackHandler(req, res) {
         }
       );
 
-      
-        const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
-          { _id: tokenFind.submissionId },
-          { $inc: { outcome: 1 } },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log("Successfully Incremented Solved");
-            }
+    if (callbackBody.status.id == 3) {
+      const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
+        { _id: tokenFind.submissionId },
+        { $inc: { outcome: 1 } },
+        function (error, success) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Successfully Incremented Solved");
           }
-        );
-      
+        }
+      );
+    }
     } else {
     }
 
