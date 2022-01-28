@@ -13,7 +13,9 @@ const submissionSchema = new mongoose.Schema(
     },
     score: {
       type: Number,
-      default: 0,
+      default: function() {
+        return this.outcome * 10
+      },
     },
     outcome: {
       type: Number,
