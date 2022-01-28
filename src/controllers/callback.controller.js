@@ -29,7 +29,14 @@ async function callBackHandler(req, res) {
           }
         })
       
-      
+      const UpdateSubmission = SubmissionModel.findOneAndUpdate({_id: tokenFind.submissionId}, { $inc: { outcome: 1 }},function (error, success) {
+        if (error) {
+          console.log(error);
+         } else {
+           console.log("Successfully Incremented Solved");
+          }
+        })
+
     }else{
 
     }
