@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const executionSchema = new mongoose.Schema(
   {
     submissionId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
     },
     token: {
         type: String,
     },
     execute: {
-        type: mongoose.Mixed,
+        type: mongoose.Schema.Types.Mixed,
     },
   },
   { _id: true, strict: false }
