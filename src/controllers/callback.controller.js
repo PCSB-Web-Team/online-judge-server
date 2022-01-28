@@ -35,7 +35,7 @@ async function callBackHandler(req, res) {
         }
       );
 
-      if (callbackBody.status.id == 3) {
+      if (callbackBody.status.id == "3") {
         const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
           { _id: tokenFind.submissionId },
           { $inc: { outcome: 1 } },
