@@ -21,7 +21,7 @@ async function callBackHandler(req, res) {
     console.log(callbackBody)
     const tokenFind = await ExecutionModel.findOne({token: callbackBody.token})
     if(tokenFind){
-      ExecutionModel.updateOne({token: callbackBody.token}, {$set: {execute: callbackBody}})
+      ExecutionModel.update({token: callbackBody.token}, {$set: {execute: callbackBody}})
     }
     console.log({"here":tokenFind})
     res.send("Done")
