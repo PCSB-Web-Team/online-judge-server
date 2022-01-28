@@ -8,9 +8,7 @@ const executionSchema = new mongoose.Schema(
     token: {
         type: String,
     },
-    execute: {
-        type: mongoose.Schema.Types.Mixed,
-    },
+    execute: mongoose.Schema.Types.Mixed,
   },
   { _id: true, strict: false }
 );
