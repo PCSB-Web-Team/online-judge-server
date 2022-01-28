@@ -22,8 +22,7 @@ async function callBackHandler(req, res) {
     if(tokenFind){
       ExecutionModel.updateOne({token: callbackBody.token}, {$set: {execute: callbackBody}}, {upsert: true})
     }
-    console.log(tokenFind)
-    res.json(tokenFind);
+    console.log({"here":tokenFind})
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }
