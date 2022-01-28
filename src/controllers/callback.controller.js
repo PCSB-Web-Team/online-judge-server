@@ -22,7 +22,7 @@ async function callBackHandler(req, res) {
     console.log({"here":tokenFind})
     if(tokenFind){
       console.log("in")
-      const UpdateExecution = ExecutionModel.findOneAndUpdate({token: callbackBody.token}, { $push: { execute: callbackBody  } },
+      const UpdateExecution = ExecutionModel.findOneAndUpdate({token: callbackBody.token}, {execute: {"Hello": "hi"}},
       function (error, success) {
             if (error) {
                 console.log(error);
