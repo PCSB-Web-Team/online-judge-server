@@ -23,7 +23,7 @@ async function callBackHandler(req, res) {
     });
 
     if (tokenFind) {
-      const UpdateExecution = await ExecutionModel.findOneAndUpdate(
+      const UpdateExecution = ExecutionModel.findOneAndUpdate(
         { token: callbackBody.token },
         { execute: callbackBody },
         function (error, success) {
