@@ -19,17 +19,13 @@ async function callBackHandler(req, res) {
   try {
     const callbackBody =  req.body;
     const tokenFind = await ExecutionModel.findOne({token: callbackBody.token})
-    console.log({"here":tokenFind})
+    
     if(tokenFind){
-      console.log("in")
-      const UpdateExecution = ExecutionModel.findOneAndUpdate({token: callbackBody.token}, {execute: callbackBody},
-      function (error, success) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log("Successfully Updated Execution");
-            }
-        })
+      const UpdateExecution = ExecutionModel.findOneAndUpdate({token: callbackBody.token}, {execute: callbackBody})
+      
+      
+    }else{
+
     }
     
     res.send("Done")
