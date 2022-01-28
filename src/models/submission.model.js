@@ -15,9 +15,9 @@ const submissionSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    status: {
-      id: { type: String, default: 0 },
-      description: { type: String, default: "Processing" },
+    outcome: {
+      type: Number,
+      default: 0,
     },
   },
   { _id: true, strict: false }
