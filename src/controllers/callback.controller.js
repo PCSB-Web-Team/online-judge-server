@@ -16,8 +16,11 @@ const SubmissionModel = require("../models/submission.model");
 
 async function callBackHandler(req, res) {
   try {
-    const newSubmission = await SubmissionModel.create(req.body);
-    res.json(newSubmission);
+    const callbackBody =  req.body
+    const tokenFind = await SubmissionModel.findOne({token: callbackBody.token})
+    console.log(tokenFind)
+    // const newSubmission = await SubmissionModel.create(callbackBody);
+    res.json(tokenFind);
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }

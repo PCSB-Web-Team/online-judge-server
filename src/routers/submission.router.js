@@ -14,6 +14,7 @@ SubmissionRouter.get("/user/:userId", getUserSubmissions);
 SubmissionRouter.post("/run", run);
 SubmissionRouter.get("/:userId/:questionId", getUserSubmissionForQuestion);
 SubmissionRouter.get("/:token", getSubmission);
+SubmissionRouter.post("/", submit);
 SubmissionRouter.get("/", getAllSubmissions);
 
 module.exports = SubmissionRouter;

@@ -2,6 +2,74 @@ const Submission = require("../models/submission.model");
 const Question = require("../models/question.model");
 const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
+const SubmissionModel = require("../models/submission.model");
+const ExecutionModel = require("../models/execution.model");
+
+
+// This is where Judge0 will send back the status of code execution
+const callBackURL = "https://online-judge-csi.herokuapp.com/api/callback";
+
+// Create Submission by sending Judge0 with source_code, language_id and callback_url
+// Token received back from Judge0 is stored along with code and other important ids
+// NOTE: Judge0 sends code execution status on callback_url having PUT request in router
+
+async function submit(req, res) {
+  const { languageId, code, userId, questionId, contestId } = req.body;
+
+  try {
+    const question = await Question.findById(questionId);
+    const testCase = question.example;
+    const maxScore = question.score;
+    const testInput = testCase.map(({ input }) =>
+      Buffer.from(input).toString("base64")
+    );
+    const testOutput = testCase.map(({ output }) =>
+      Buffer.from(output).toString("base64")
+    );
+    const encodedCode = Buffer.from(code).toString("base64");
+
+    const postData = testInput.map((element, index) => ({
+      language_id: languageId,
+      source_code: encodedCode,
+      stdin: element,
+      expected_output: testOutput[index],
+      callback_url: callBackURL,
+    }));
+
+    let postResult = await axios({
+      method: "POST",
+      url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
+      params: { base64_encoded: "true" },
+      headers: {
+        "content-type": "application/json",
+        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+        "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+      },
+      data: {
+        submissions: postData,
+      },
+    });
+
+    const tokens = postResult.data.map(({ token }) => token);
+    const tokenFind = await SubmissionModel.find({token: { $in: tokens }})
+    
+    if(tokenFind.length==0){
+      
+      const newSubmission = await SubmissionModel.insert( { userId: userId, contestId: contestId, questionId: questionId } )
+
+      for (let i = 0; i < tokens.length; i++){
+        await ExecutionModel.insert( { submissionId: newSubmission._id, token: tokens[i] } )
+      }
+      
+    }else{
+      console.log("here")
+    }
+    
+
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
 
 // Run code by sending Judge0 with source_code, language_id and sample_input (stdin)
 // Token received back from Judge0 is then used to get the output (stdout)
@@ -114,6 +182,7 @@ async function getUserSubmissionForQuestion(req, res) {
 }
 
 module.exports = {
+  submit,
   run,
   getSubmission,
   getAllSubmissions,
