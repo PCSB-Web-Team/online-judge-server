@@ -7,7 +7,7 @@ const ExecutionModel = require("../models/execution.model");
 
 
 // This is where Judge0 will send back the status of code execution
-const callBackURL = "https://online-judge-csi.herokuapp.com/api/callback";
+const callBackURL = "https://online-judge-test.herokuapp.com/api/callback";
 
 // Create Submission by sending Judge0 with source_code, language_id and callback_url
 // Token received back from Judge0 is stored along with code and other important ids
@@ -51,8 +51,8 @@ async function submit(req, res) {
     });
 
     const tokens = postResult.data.map(({ token }) => token);
-    const tokenFind = await SubmissionModel.find({token: { $in: tokens }})
-    
+    const tokenFind = await ExecutionModel.find({token: { $in: tokens }})
+
     if(tokenFind.length==0){
       
       const newSubmission = await SubmissionModel.insert( { userId: userId, contestId: contestId, questionId: questionId } )

@@ -1,4 +1,5 @@
 const SubmissionModel = require("../models/submission.model");
+const ExecutionModel = require("../models/execution.model");
 
 // const body = {
 //   stdout: "aGVsbG8sIEp1ZGdlMAo=\n",
@@ -17,9 +18,11 @@ const SubmissionModel = require("../models/submission.model");
 async function callBackHandler(req, res) {
   try {
     const callbackBody =  req.body
-    const tokenFind = await SubmissionModel.findOne({token: callbackBody.token})
+    const tokenFind = await ExecutionModel.findOne({token: callbackBody.token})
+    if(tokenFind){
+      ExecutionModel.updateOne({token: callbackBody.token}, {$set: {execute: callbackBody}}, {upsert: true})
+    }
     console.log(tokenFind)
-    // const newSubmission = await SubmissionModel.create(callbackBody);
     res.json(tokenFind);
   } catch (err) {
     res.status(400).send("Error: " + err.message);
