@@ -9,7 +9,7 @@ const executionSchema = new mongoose.Schema(
         type: String,
     },
     execute: {
-        type: Object,
+        type: mongoose.Mixed,
     },
   },
   { _id: true, strict: false }
