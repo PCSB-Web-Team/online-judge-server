@@ -17,13 +17,14 @@ const ExecutionModel = require("../models/execution.model");
 
 async function callBackHandler(req, res) {
   try {
-    const callbackBody =  req.body
-    console.log(callbackBody)
+    const callbackBody =  req.body;
     const tokenFind = await ExecutionModel.findOne({token: callbackBody.token})
-    if(tokenFind){
-      ExecutionModel.update({token: callbackBody.token}, {$set: {execute: callbackBody}})
-    }
     console.log({"here":tokenFind})
+    if(tokenFind){
+      console.log("in")
+      ExecutionModel.updateOne({token: callbackBody.token}, {$set: {execute: callbackBody}})
+    }
+    
     res.send("Done")
   } catch (err) {
     res.status(400).send("Error: " + err.message);
