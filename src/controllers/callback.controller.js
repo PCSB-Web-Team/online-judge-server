@@ -18,6 +18,7 @@ const ExecutionModel = require("../models/execution.model");
 async function callBackHandler(req, res) {
   try {
     const callbackBody =  req.body
+    console.log(callbackBody)
     const tokenFind = await ExecutionModel.findOne({token: callbackBody.token})
     if(tokenFind){
       ExecutionModel.updateOne({token: callbackBody.token}, {$set: {execute: callbackBody}}, {upsert: true})
