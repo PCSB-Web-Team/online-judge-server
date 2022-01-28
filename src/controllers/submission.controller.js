@@ -56,7 +56,7 @@ async function submit(req, res) {
     if(tokenFind.length==0){
       
       const newSubmission = await SubmissionModel.insert( { userId: userId, contestId: contestId, questionId: questionId } )
-
+      console.log(newSubmission)
       for (let i = 0; i < tokens.length; i++){
         await ExecutionModel.insert( { submissionId: newSubmission._id, token: tokens[i] } )
       }
