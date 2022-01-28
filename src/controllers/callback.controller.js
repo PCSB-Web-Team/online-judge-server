@@ -17,31 +17,42 @@ const ExecutionModel = require("../models/execution.model");
 
 async function callBackHandler(req, res) {
   try {
-    const callbackBody =  req.body;
-    const tokenFind = await ExecutionModel.findOne({token: callbackBody.token})
-    
-    if(tokenFind){
-      const UpdateExecution = ExecutionModel.findOneAndUpdate({token: callbackBody.token}, {execute: callbackBody},function (error, success) {
-        if (error) {
-          console.log(error);
-         } else {
-           console.log("Successfully Updated Execution");
-          }
-        })
-      
-      const UpdateSubmission = SubmissionModel.findOneAndUpdate({_id: tokenFind.submissionId}, { $inc: { outcome: 1 }},function (error, success) {
-        if (error) {
-          console.log(error);
-         } else {
-           console.log("Successfully Incremented Solved");
-          }
-        })
+    const callbackBody = req.body;
+    const tokenFind = await ExecutionModel.findOne({
+      token: callbackBody.token,
+    });
 
-    }else{
+    if (tokenFind) {
+      const UpdateExecution = await ExecutionModel.findOneAndUpdate(
+        { token: callbackBody.token },
+        { execute: callbackBody },
+        function (error, success) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Successfully Updated Execution");
+          }
+        }
+      );
 
+      if (callbackBody.status.id == 3) {
+        const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
+          { _id: tokenFind.submissionId },
+          { $inc: { outcome: 1 } },
+          { upsert: true },
+          function (error, success) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Successfully Incremented Solved");
+            }
+          }
+        );
+      }
+    } else {
     }
-    
-    res.send("Done")
+
+    res.send("Done");
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }
