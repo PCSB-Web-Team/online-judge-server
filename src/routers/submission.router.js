@@ -1,5 +1,6 @@
 const {
-  submission,
+  submit,
+  run,
   getSubmission,
   getAllSubmissions,
   getUserSubmissionForQuestion,
@@ -10,9 +11,9 @@ const { validateToken } = require("../middlewares/jwt");
 const SubmissionRouter = require("express").Router();
 
 SubmissionRouter.get("/user/:userId", getUserSubmissions);
+SubmissionRouter.post("/run", run);
 SubmissionRouter.get("/:userId/:questionId", getUserSubmissionForQuestion);
 SubmissionRouter.get("/:token", getSubmission);
 SubmissionRouter.get("/", getAllSubmissions);
-SubmissionRouter.post("/", submission);
 
 module.exports = SubmissionRouter;
