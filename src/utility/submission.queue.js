@@ -6,7 +6,6 @@ const submissionQueue = new Bull("submissions", {
   limiter: {
     max: 10,
     duration: 10000,
-    groupKey: true,
   },
 });
 
@@ -14,6 +13,7 @@ var list = [];
 
 const submissionProcess = async (job) => {
   list.push(job.data);
+  console.log("Added")
   if (list.length == 10) {
     executeBatch(list);
     list = [];

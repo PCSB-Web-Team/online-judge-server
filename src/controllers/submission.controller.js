@@ -3,7 +3,7 @@ const Question = require("../models/question.model");
 const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
 const SubmissionModel = require("../models/submission.model");
-const ExecutionModel = require("../models/execution.model");
+const { produce } = require("../utility/submission.queue");
 
 
 // This is where Judge0 will send back the status of code execution
@@ -37,35 +37,13 @@ async function submit(req, res) {
       stdin: element,
       expected_output: testOutput[index],
       callback_url: callBackURL,
+      submissionId: newSubmission._id,
     }));
-
-    let postResult = await axios({
-      method: "POST",
-      url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
-      params: { base64_encoded: "true" },
-      headers: {
-        "content-type": "application/json",
-        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-        "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
-      },
-      data: {
-        submissions: postData,
-      },
-    });
-
-    const tokens = postResult.data.map(({ token }) => token);
-    const tokenFind = await ExecutionModel.find({token: { $in: tokens }})
-
-    if(tokenFind.length==0){
-      
-      for (let i = 0; i < tokens.length; i++){
-        await ExecutionModel.create( { submissionId: newSubmission._id, token: tokens[i] } )
-      }
-      
-    }else{
-      console.log("here")
-    }
     
+    // Calling Redis to make Queue
+    postData.map(data => produce(data));
+    
+    res.send("Done")
 
   } catch (err) {
     res.status(400).send(err.message);
