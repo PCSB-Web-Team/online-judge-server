@@ -31,14 +31,14 @@ async function callBackHandler(req, res) {
         { _id: executionBody.submissionId }
       );
 
-        submissionBody.score = submissionBody.score + 10
+        // submissionBody.score = submissionBody.score + 10
 
-      // const updatedSubmission = await SubmissionModel.updateOne(
-      //   { _id: executionBody.submissionId },
-      //   { score: 10 },
-      //   { upsert: true }
-      // );
-      submissionBody.save();
+      const updatedSubmission = await SubmissionModel.updateOne(
+        { _id: executionBody.submissionId },
+        {$inc: { score: 10}},
+        { upsert: true }
+      );
+      // submissionBody.save();
     }
     
 
