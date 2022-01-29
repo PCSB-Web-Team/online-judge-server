@@ -22,11 +22,11 @@ async function callBackHandler(req, res) {
       token: callbackBody.token,
     });
     console.log({"here":tokenFind})
-    await ExecutionModel.updateOne(
+    const test = await ExecutionModel.findOneAndUpdate(
       { token: callbackBody.token },
        callbackBody ,{upsert: true}
     );
-      console.log(tokenFind)
+      console.log(test)
     // const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
     //   { _id: tokenFind.submissionId },
     //   { $inc: { outcome: 1 } },
