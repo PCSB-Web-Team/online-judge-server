@@ -12,8 +12,8 @@ Router.get("", (req, res) => {
 Router.use("/auth", auth);
 Router.use("/user", UserRouter);
 Router.use("/contest", ContestRouter);
-Router.use('/question', QuestionRouter);
-Router.use('/callback', CallBackRouter)
-Router.use('/submission', SubmissionRouter)
+Router.use("/question", QuestionRouter);
+Router.use("/callback", CallBackRouter);
+Router.use("/submission", SubmissionRouter);
 
 module.exports = Router;
