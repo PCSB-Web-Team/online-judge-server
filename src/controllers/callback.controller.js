@@ -39,7 +39,6 @@ async function callBackHandler(req, res) {
       const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
         { _id: tokenFind.submissionId },
         { $inc: { outcome: 1 } },
-        { upsert:true },
         function (error, success) {
           if (error) {
             console.log(error);
