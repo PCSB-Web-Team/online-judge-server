@@ -21,21 +21,17 @@ async function callBackHandler(req, res) {
 
     const executionBody = await ExecutionModel.findOneAndUpdate(
       { token: callbackBody.token },
-       callbackBody ,{upsert: true}
+      callbackBody,
+      { upsert: true }
     );
-      console.log(executionBody)
-    // const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
-    //   { _id: tokenFind.submissionId },
-    //   { $inc: { outcome: 1 } },
-    //   function (error, success) {
-    //     if (error) {
-    //       console.log(error);
-    //     } else {
-    //       console.log("Successfully Incremented Solved");
-    //     }
-    //   }
-    // );
 
+    const submissionBody = await SubmissionModel.findOneAndUpdate(
+      { _id: executionBody.submissionId },
+      { score: 10 },
+      { upsert: true }
+    );
+
+    console.log("Done")
     res.send("Done");
   } catch (err) {
     res.status(400).send("Error: " + err.message);
