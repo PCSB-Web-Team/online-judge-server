@@ -22,34 +22,29 @@ async function callBackHandler(req, res) {
       token: callbackBody.token,
     });
 
-    if (tokenFind) {
-      const UpdateExecution = ExecutionModel.findOneAndUpdate(
-        { token: callbackBody.token },
-        { execute: callbackBody },
-        function (error, success) {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log("Successfully Updated Execution");
-          }
+    const updateExecution = ExecutionModel.findOneAndUpdate(
+      { token: callbackBody.token },
+      { callbackBody },
+      function (error, success) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Successfully Updated Execution");
         }
-      );
-
-    
-      const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
-        { _id: tokenFind.submissionId },
-        { $inc: { outcome: 1 } },
-        function (error, success) {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log("Successfully Incremented Solved");
-          }
-        }
-      );
-    
-    } else {
-    }
+      }
+    );
+      console.log(updateExecution)
+    // const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
+    //   { _id: tokenFind.submissionId },
+    //   { $inc: { outcome: 1 } },
+    //   function (error, success) {
+    //     if (error) {
+    //       console.log(error);
+    //     } else {
+    //       console.log("Successfully Incremented Solved");
+    //     }
+    //   }
+    // );
 
     res.send("Done");
   } catch (err) {
