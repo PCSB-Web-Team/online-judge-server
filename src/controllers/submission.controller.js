@@ -17,6 +17,9 @@ async function submit(req, res) {
   const { languageId, code, userId, questionId, contestId } = req.body;
 
   try {
+
+    const newSubmission = await SubmissionModel.create( { userId: userId, contestId: contestId, questionId: questionId } )
+
     const question = await Question.findById(questionId);
     const testCase = question.example;
     const maxScore = question.score;
@@ -55,8 +58,6 @@ async function submit(req, res) {
 
     if(tokenFind.length==0){
       
-      const newSubmission = await SubmissionModel.create( { userId: userId, contestId: contestId, questionId: questionId } )
-      console.log(newSubmission)
       for (let i = 0; i < tokens.length; i++){
         await ExecutionModel.create( { submissionId: newSubmission._id, token: tokens[i] } )
       }
