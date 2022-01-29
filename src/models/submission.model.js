@@ -15,10 +15,6 @@ const submissionSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    outcome: {
-      type: Number,
-      default: 0,
-    },
   },
   { _id: true, strict: false }
 );
