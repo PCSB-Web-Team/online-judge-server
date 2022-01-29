@@ -7,7 +7,7 @@ const { produce } = require("../utility/submission.queue");
 
 
 // This is where Judge0 will send back the status of code execution
-const callBackURL = "https://online-judge-test.herokuapp.com/api/callback";
+const callBackURL = "https://online-judge-csi.herokuapp.com/api/callback";
 
 // Create Submission by sending Judge0 with source_code, language_id and callback_url
 // Token received back from Judge0 is stored along with code and other important ids
@@ -18,11 +18,15 @@ async function submit(req, res) {
 
   try {
 
+    // Create a new Submision when user clicks on Submit
     const newSubmission = await SubmissionModel.create( { userId: userId, contestId: contestId, questionId: questionId } )
 
+    // Find Question by questionId and save Test Cases
     const question = await Question.findById(questionId);
     const testCase = question.example;
     const maxScore = question.score;
+
+    // Encode Input (stdin), Output (expected_output) and code (source_code) to base64
     const testInput = testCase.map(({ input }) =>
       Buffer.from(input).toString("base64")
     );
@@ -31,6 +35,7 @@ async function submit(req, res) {
     );
     const encodedCode = Buffer.from(code).toString("base64");
 
+    // Making array of same submission but different test cases
     const postData = testInput.map((element, index) => ({
       language_id: languageId,
       source_code: encodedCode,
@@ -43,7 +48,7 @@ async function submit(req, res) {
     // Calling Redis to make Queue
     postData.map(data => produce(data));
     
-    res.send("Done")
+    res.send("Callback Called...Please wait for result")
 
   } catch (err) {
     res.status(400).send(err.message);

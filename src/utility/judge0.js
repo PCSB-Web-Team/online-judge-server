@@ -1,10 +1,11 @@
 const axios = require("axios");
 const ExecutionModel = require("../models/execution.model");
 
+// Call Judge0 for Submit
 async function executeBatch(data) {
-    console.log("Calling Judge0 with 10 Submissions");
-    
-    //  call Judge0 and get n tokens
+  try {
+
+    //  Call Judge0 and get n tokens
     let postResult = await axios({
       method: "POST",
       url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
@@ -19,18 +20,27 @@ async function executeBatch(data) {
       },
     });
 
+    // Array of tokens recieved by Judge0
     const tokens = postResult.data.map(({ token }) => token);
 
-    console.log("Batch Processed")
+    console.log("Batch Processed");
 
-    for (let i = 0; i < tokens.length; i++){
-      await ExecutionModel.create( { submissionId: data[i].submissionId, token: tokens[i] } )
-    } 
+    // Create n executions in DB with (n tokens)*times
+    for (let i = 0; i < tokens.length; i++) {
+      await ExecutionModel.create({
+        submissionId: data[i].submissionId,
+        token: tokens[i],
+      });
+    }
 
+    // Next : The status recieved by Judge0 on callback will change the submission model
+    
+  } catch (err) {
+    res.status(400).send("Error: " + err.message);
   }
+}
 
-  function excuteSingle() {
-    //   for run
-  }
+// Call Judge0 for Run
+function excuteSingle() {}
 
-  module.exports = {executeBatch};
+module.exports = { executeBatch };

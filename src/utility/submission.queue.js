@@ -1,6 +1,9 @@
 const Bull = require("bull");
 const { executeBatch } = require("./judge0");
 
+// Queue for Submit
+
+// Create a new Queue with Max submissions per time duration
 const submissionQueue = new Bull("submissions", {
   redis: "redis:6379",
   limiter: {
@@ -11,15 +14,20 @@ const submissionQueue = new Bull("submissions", {
 
 var list = [];
 
+// Redis Consumer : Executing after Producer adds data to queue
 const submissionProcess = async (job) => {
+
+  // Push data to array list
   list.push(job.data);
-  console.log("Added")
+
+  // If list length is n then send for Batch Submission (Judge0)
   if (list.length == 10) {
     executeBatch(list);
     list = [];
   }
 };
 
+// Redis Producer : Adds data to queue
 function produce(data) {
   submissionQueue.add(data);
 }
