@@ -22,7 +22,7 @@ async function callBackHandler(req, res) {
       token: callbackBody.token,
     });
 
-    const test = await ExecutionModel.findOneAndUpdate(
+    await ExecutionModel.updateOne(
       { token: callbackBody.token },
        callbackBody ,{upsert: true},
       function (error, success) {
@@ -33,7 +33,7 @@ async function callBackHandler(req, res) {
         }
       }
     );
-      console.log(test)
+      console.log(tokenFind)
     // const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
     //   { _id: tokenFind.submissionId },
     //   { $inc: { outcome: 1 } },
