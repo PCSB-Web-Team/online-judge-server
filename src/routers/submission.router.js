@@ -4,7 +4,7 @@ const {
   getSubmission,
   getAllSubmissions,
   getUserSubmissionForQuestion,
-  getUserSubmissions
+  getUserSubmissions,
 } = require("../controllers/submission.controller");
 const { validateToken } = require("../middlewares/jwt");
 

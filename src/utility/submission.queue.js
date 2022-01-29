@@ -1,9 +1,6 @@
 const Bull = require("bull");
 const { executeBatch } = require("./judge0");
 
-// Queue for Submit
-
-// Create a new Queue with Max submissions per time duration
 const submissionQueue = new Bull("submissions", {
   redis: "redis:6379",
   limiter: {

@@ -1,5 +1,4 @@
 const Contest = require("../models/contest.model");
-const mongoose = require("mongoose");
 
 // Create a new Contest
 
@@ -37,4 +36,14 @@ async function getAllContest(req, res) {
   }
 }
 
-module.exports = { newContest, getAllContest };
+async function getContestById(req, res) {
+  const { contestId } = req.params;
+  try {
+    const contest = await Contest.findOne({ _id: contestId });
+    res.send(contest);
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
+
+module.exports = { newContest, getAllContest, getContestById };

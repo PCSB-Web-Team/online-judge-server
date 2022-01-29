@@ -5,7 +5,6 @@ const axios = require("axios");
 const SubmissionModel = require("../models/submission.model");
 const { produce } = require("../utility/submission.queue");
 
-
 // This is where Judge0 will send back the status of code execution
 const callBackURL = "https://online-judge-test.herokuapp.com/api/callback";
 
@@ -17,9 +16,12 @@ async function submit(req, res) {
   const { languageId, code, userId, questionId, contestId } = req.body;
 
   try {
-
     // Create a new Submision when user clicks on Submit
-    const newSubmission = await SubmissionModel.create( { userId: userId, contestId: contestId, questionId: questionId } )
+    const newSubmission = await SubmissionModel.create({
+      userId: userId,
+      contestId: contestId,
+      questionId: questionId,
+    });
 
     // Find Question by questionId and save Test Cases
     const question = await Question.findById(questionId);
@@ -44,12 +46,11 @@ async function submit(req, res) {
       callback_url: callBackURL,
       submissionId: newSubmission._id,
     }));
-    
-    // Calling Redis to make Queue
-    postData.map(data => produce(data));
-    
-    res.send("Callback Called...Please wait for result")
 
+    // Calling Redis to make Queue
+    postData.map((data) => produce(data));
+    
+    res.send("Callback Called...Please wait for result");
   } catch (err) {
     res.status(400).send(err.message);
   }
@@ -62,11 +63,10 @@ async function run(req, res) {
   const { languageId, code, stdin } = req.body;
 
   try {
-    if( languageId && code ){
-
+    if (languageId && code) {
       const encodedStdin = Buffer.from(stdin).toString("base64");
       const encodedCode = Buffer.from(code).toString("base64");
-      
+
       let postResult = await axios({
         method: "POST",
         url: "https://judge0-ce.p.rapidapi.com/submissions",
@@ -74,7 +74,8 @@ async function run(req, res) {
         headers: {
           "content-type": "application/json",
           "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-          "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+          "x-rapidapi-key":
+            "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
         },
         data: {
           language_id: languageId,
@@ -82,9 +83,10 @@ async function run(req, res) {
           stdin: encodedStdin,
         },
       });
-      
-      if (!postResult) return res.status(409).send("Run code unable to process. Try again");
-     
+
+      if (!postResult)
+        return res.status(409).send("Run code unable to process. Try again");
+
       const token = postResult.data.token;
 
       let getResult = await axios({
@@ -93,18 +95,20 @@ async function run(req, res) {
         params: { base64_encoded: "true", fields: "*" },
         headers: {
           "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-          "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+          "x-rapidapi-key":
+            "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
         },
       });
-      
-      if (!getResult) return res.status(409).send("Run code unable to process. Try again");
 
-      if(!getResult.data.stdout) return res.send(null);
-      
+      if (!getResult)
+        return res.status(409).send("Run code unable to process. Try again");
+
+      if (!getResult.data.stdout) return res.send(null);
+
       const stdout = Buffer.from(getResult.data.stdout, "base64").toString(
         "ascii"
       );
-      
+
       res.send(stdout);
     } else {
       res.status(400).send("Invalid data received, code or language missing");
@@ -173,4 +177,3 @@ module.exports = {
   getUserSubmissions,
   getUserSubmissionForQuestion,
 };
-
