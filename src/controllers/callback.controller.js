@@ -18,15 +18,12 @@ const ExecutionModel = require("../models/execution.model");
 async function callBackHandler(req, res) {
   try {
     const callbackBody = req.body;
-    const tokenFind = await ExecutionModel.findOne({
-      token: callbackBody.token,
-    });
-    console.log({"here":tokenFind})
-    const test = await ExecutionModel.findOneAndUpdate(
+
+    const executionBody = await ExecutionModel.findOneAndUpdate(
       { token: callbackBody.token },
        callbackBody ,{upsert: true}
     );
-      console.log(test)
+      console.log(executionBody)
     // const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
     //   { _id: tokenFind.submissionId },
     //   { $inc: { outcome: 1 } },
