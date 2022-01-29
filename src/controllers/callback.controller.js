@@ -24,14 +24,7 @@ async function callBackHandler(req, res) {
     console.log({"here":tokenFind})
     await ExecutionModel.updateOne(
       { token: callbackBody.token },
-       callbackBody ,{upsert: true},
-      function (error, success) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Successfully Updated Execution");
-        }
-      }
+       callbackBody ,{upsert: true}
     );
       console.log(tokenFind)
     // const UpdateSubmission = await SubmissionModel.findOneAndUpdate(
