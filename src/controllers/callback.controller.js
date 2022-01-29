@@ -24,13 +24,21 @@ async function callBackHandler(req, res) {
       callbackBody,
       { upsert: true }
     );
-    
+
     if(callbackBody.status.id==3){
-      const submissionBody = await SubmissionModel.findOneAndUpdate(
-        { _id: executionBody.submissionId },
-        { score: 10 },
-        { upsert: true }
+
+      const submissionBody = await SubmissionModel.findOne(
+        { _id: executionBody.submissionId }
       );
+
+        submissionBody.score = submissionBody.score + 10
+
+      // const updatedSubmission = await SubmissionModel.updateOne(
+      //   { _id: executionBody.submissionId },
+      //   { score: 10 },
+      //   { upsert: true }
+      // );
+      submissionBody.save();
     }
     
 
