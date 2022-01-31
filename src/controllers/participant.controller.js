@@ -50,12 +50,12 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
   try {
     // checking if all the details have been received
     if (!contestId || !userId || !score || !questionId)
-      return "Please Send All the fields( contestId, userId, score, questionId)";
+      return console.log( "Please Send All the fields( contestId, userId, score, questionId)");
         
 
     // serching the participant using the userId and contestId.
     let participant = await Participant.findOne({ contestId, userId });
-    if (!participant) return "Participant does not exist"; 
+    if (!participant) return console.log("Participant does not exist"); 
 
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
@@ -73,7 +73,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
     // saving the updated doc to mongo
     participant.individualScore = { ...participant.individualScore };
     await participant.save();
-    return participant;
+    return console.log(participant);
 
   } catch (err) {
     return err.message;
