@@ -48,4 +48,4 @@ const runSchema = new mongoose.Schema(
 
 const RunModel = mongoose.model("run", runSchema);
 
-module.exports = SubmissionModel;
+module.exports = RunModel;
