@@ -67,14 +67,11 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
       sum += parseInt(value);
     });
 
-    // updating the total score
-    participant.score = sum;
-
     // saving the updated doc to mongo
     participant.individualScore = { ...participant.individualScore };
     await Participant.updateOne(
       { _id: participant._id },
-      { $set: { individualScore: participant.individualScore } }
+      { $set: { individualScore: participant.individualScore, score: sum } }
     );
     return console.log("Updated participant Id: " + participant._id);
   } catch (err) {
