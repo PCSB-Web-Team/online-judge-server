@@ -3,10 +3,12 @@ const Run = require("../models/run.model");
 const Question = require("../models/question.model");
 const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
-const { produce } = require("../utility/submission.queue");
+const { produceSubmission } = require("../utility/submission.queue");
+const { produceRun } = require("../utility/run.queue");
 
 // This is where Judge0 will send back the status of code execution
-const callBackURL = "https://online-judge-test.herokuapp.com/api/callback";
+const subCallBackURL = "https://online-judge-test.herokuapp.com/api/callback/sub";
+const runCallBackURL = "https://online-judge-test.herokuapp.com/api/callback/run";
 
 // Create Submission by sending Judge0 with source_code, language_id and callback_url
 // Token received back from Judge0 is stored along with code and other important ids
@@ -16,7 +18,7 @@ async function submit(req, res) {
   const { languageId, code, userId, questionId, contestId } = req.body;
 
   try {
-    if (languageId && userId && questionId && contestId) {
+    if (languageId && userId && questionId && contestId && code) {
 
       // Create a new Submision when user clicks on Submit
       const newSubmission = await Submission.create({
@@ -45,17 +47,17 @@ async function submit(req, res) {
         source_code: encodedCode,
         stdin: element,
         expected_output: testOutput[index],
-        callback_url: callBackURL,
+        callback_url: subCallBackURL,
         submissionId: newSubmission._id,
       }));
 
       // Calling Redis to make Queue
-      postData.map((data) => produce(data));
+      postData.map((data) => produceSubmission(data));
 
       res.send(newSubmission._id);
-      
+
     } else {
-      res.status(400).send("Invalid data received, code or language missing");
+      res.status(400).send("Invalid data received, send valid data");
     }
   } catch (err) {
     res.status(400).send(err.message);
@@ -66,60 +68,38 @@ async function submit(req, res) {
 // Token received back from Judge0 is then used to get the output (stdout)
 
 async function run(req, res) {
-  const { languageId, code, stdin } = req.body;
+  const { languageId, code, userId, questionId, contestId, stdin } = req.body;
 
   try {
-    if (languageId && code) {
+    if ( languageId && code && userId && questionId && contestId ) {
+
+      // Create a new Run Submission when user clicks on Run
+      const newRun = await Run.create({
+        userId: userId,
+        contestId: contestId,
+        questionId: questionId,
+      });
+
+      // Encode Input (stdin) and code (source_code) to base64
       const encodedStdin = Buffer.from(stdin).toString("base64");
       const encodedCode = Buffer.from(code).toString("base64");
 
+      // Making object to send to Judge0
       const postData = {
         language_id: languageId,
         source_code: encodedCode,
         stdin: encodedStdin,
+        callback_url: runCallBackURL,
+        runId: newRun._id,
       };
 
-      let postResult = await axios({
-        method: "POST",
-        url: "https://judge0-ce.p.rapidapi.com/submissions",
-        params: { base64_encoded: "true", fields: "*" },
-        headers: {
-          "content-type": "application/json",
-          "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-          "x-rapidapi-key":
-            "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
-        },
-        data: postData,
-      });
+      // Calling Redis to make Queue
+      produceRun(postData);
 
-      if (!postResult)
-        return res.status(409).send("Run code unable to process. Try again");
+      res.send(newRun._id);
 
-      const token = postResult.data.token;
-
-      let getResult = await axios({
-        method: "GET",
-        url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
-        params: { base64_encoded: "true", fields: "*" },
-        headers: {
-          "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-          "x-rapidapi-key":
-            "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
-        },
-      });
-
-      if (!getResult)
-        return res.status(409).send("Run code unable to process. Try again");
-
-      if (!getResult.data.stdout) return res.send(null);
-
-      const stdout = Buffer.from(getResult.data.stdout, "base64").toString(
-        "ascii"
-      );
-
-      res.send(stdout);
     } else {
-      res.status(400).send("Invalid data received, code or language missing");
+      res.status(400).send("Invalid data received, send valid data");
     }
   } catch (err) {
     res.status(400).send(err.message);

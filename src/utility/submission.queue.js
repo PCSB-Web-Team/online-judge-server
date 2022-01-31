@@ -1,5 +1,5 @@
 const Bull = require("bull");
-const { executeBatch } = require("./judge0");
+const { submissionBatch } = require("./judge0");
 
 const submissionQueue = new Bull("submissions", {
   redis: "redis:6379",
@@ -19,16 +19,16 @@ const submissionProcess = async (job) => {
 
   // If list length is n then send for Batch Submission (Judge0)
   if (list.length == 10) {
-    executeBatch(list);
+    submissionBatch(list);
     list = [];
   }
 };
 
 // Redis Producer : Adds data to queue
-function produce(data) {
+function produceSubmission(data) {
   submissionQueue.add(data);
 }
 
 submissionQueue.process(submissionProcess);
 
-module.exports = { submissionQueue, produce };
+module.exports = { submissionQueue, produceSubmission };
