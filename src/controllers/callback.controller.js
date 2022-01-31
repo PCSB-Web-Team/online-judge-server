@@ -19,10 +19,6 @@ async function callBackHandler(req, res) {
     // If status of submission is Accepted ( 3 ) then update score
     if(callbackBody.status.id==3){
 
-      const submissionBody = await SubmissionModel.findOne(
-        { _id: executionBody.submissionId }
-      );
-
       const updatedSubmission = await SubmissionModel.updateOne(
         { _id: executionBody.submissionId },
         {$inc: { score: 10}},
