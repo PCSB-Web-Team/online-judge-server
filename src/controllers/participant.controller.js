@@ -49,11 +49,13 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
   try {
     // checking if all the details have been received
     if (!contestId || !userId || !score || !questionId)
-      return "Please Send All the fields( contestId, userId, score, questionId)";
+      return console.log(
+        "Please Send All the fields( contestId, userId, score, questionId)"
+      );
 
     // serching the participant using the userId and contestId.
     let participant = await Participant.findOne({ contestId, userId }).lean();
-    if (!participant) return "Participant does not exist";
+    if (!participant) return console.log("Participant does not exist");
 
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
@@ -74,7 +76,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
       { _id: participant._id },
       { $set: { individualScore: participant.individualScore } }
     );
-    return participant;
+    return console.log("Updated participant Id: " + participant._id);
   } catch (err) {
     return err.message;
   }
