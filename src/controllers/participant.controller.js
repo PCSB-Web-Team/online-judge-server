@@ -59,7 +59,11 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
 
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
-    participant.individualScore[questionId] = score;
+
+    participant.individualScore[questionId] = Math.max(
+      score,
+      participant.individualScore[questionId] || 0
+    );
 
     // calculating the total score
     let sum = 0;
