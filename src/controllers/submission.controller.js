@@ -1,8 +1,8 @@
 const Submission = require("../models/submission.model");
+const Run = require("../models/run.model");
 const Question = require("../models/question.model");
 const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
-const SubmissionModel = require("../models/submission.model");
 const { produce } = require("../utility/submission.queue");
 
 // This is where Judge0 will send back the status of code execution
@@ -16,41 +16,47 @@ async function submit(req, res) {
   const { languageId, code, userId, questionId, contestId } = req.body;
 
   try {
-    // Create a new Submision when user clicks on Submit
-    const newSubmission = await SubmissionModel.create({
-      userId: userId,
-      contestId: contestId,
-      questionId: questionId,
-    });
+    if (languageId && userId && questionId && contestId) {
 
-    // Find Question by questionId and save Test Cases
-    const question = await Question.findById(questionId);
-    const testCase = question.example;
-    const maxScore = question.score;
+      // Create a new Submision when user clicks on Submit
+      const newSubmission = await Submission.create({
+        userId: userId,
+        contestId: contestId,
+        questionId: questionId,
+      });
 
-    // Encode Input (stdin), Output (expected_output) and code (source_code) to base64
-    const testInput = testCase.map(({ input }) =>
-      Buffer.from(input).toString("base64")
-    );
-    const testOutput = testCase.map(({ output }) =>
-      Buffer.from(output).toString("base64")
-    );
-    const encodedCode = Buffer.from(code).toString("base64");
+      // Find Question by questionId and save Test Cases
+      const question = await Question.findById(questionId);
+      const testCase = question.example;
+      const maxScore = question.score;
 
-    // Making array of same submission but different test cases
-    const postData = testInput.map((element, index) => ({
-      language_id: languageId,
-      source_code: encodedCode,
-      stdin: element,
-      expected_output: testOutput[index],
-      callback_url: callBackURL,
-      submissionId: newSubmission._id,
-    }));
+      // Encode Input (stdin), Output (expected_output) and code (source_code) to base64
+      const testInput = testCase.map(({ input }) =>
+        Buffer.from(input).toString("base64")
+      );
+      const testOutput = testCase.map(({ output }) =>
+        Buffer.from(output).toString("base64")
+      );
+      const encodedCode = Buffer.from(code).toString("base64");
 
-    // Calling Redis to make Queue
-    postData.map((data) => produce(data));
-    
-    res.send("Callback Called...Please wait for result");
+      // Making array of same submission but different test cases
+      const postData = testInput.map((element, index) => ({
+        language_id: languageId,
+        source_code: encodedCode,
+        stdin: element,
+        expected_output: testOutput[index],
+        callback_url: callBackURL,
+        submissionId: newSubmission._id,
+      }));
+
+      // Calling Redis to make Queue
+      postData.map((data) => produce(data));
+
+      res.send(newSubmission._id);
+      
+    } else {
+      res.status(400).send("Invalid data received, code or language missing");
+    }
   } catch (err) {
     res.status(400).send(err.message);
   }
@@ -67,6 +73,12 @@ async function run(req, res) {
       const encodedStdin = Buffer.from(stdin).toString("base64");
       const encodedCode = Buffer.from(code).toString("base64");
 
+      const postData = {
+        language_id: languageId,
+        source_code: encodedCode,
+        stdin: encodedStdin,
+      };
+
       let postResult = await axios({
         method: "POST",
         url: "https://judge0-ce.p.rapidapi.com/submissions",
@@ -77,11 +89,7 @@ async function run(req, res) {
           "x-rapidapi-key":
             "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
         },
-        data: {
-          language_id: languageId,
-          source_code: encodedCode,
-          stdin: encodedStdin,
-        },
+        data: postData,
       });
 
       if (!postResult)
