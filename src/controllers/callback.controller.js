@@ -1,8 +1,9 @@
 const Submission = require("../models/submission.model");
 const Execution = require("../models/execution.model");
 const Run = require("../models/run.model");
+const { UpdateScore } = require("../controllers/participant.controller");
 
-// Receive data from Judge0 and update it in Execution 
+// Receive data from Judge0 and update it in Execution
 // Then count passed testCases submissions and update score in Submission Model
 // Note: Data received here is through PUT request on ./callback/sub by Judge0
 
@@ -18,18 +19,28 @@ async function subCallBackHandler(req, res) {
     );
 
     // If status of submission is Accepted ( 3 ) then update score
-    if(callbackBody.status.id==3){
-
+    if (callbackBody.status.id == 3) {
       const updatedSubmission = await Submission.updateOne(
         { _id: executionBody.submissionId },
-        {$inc: { score: 10}},
+        { $inc: { score: 10 } },
         { upsert: true }
       );
-      
+
+      const finalSubmission = await Submission.findOne({
+        _id: executionBody.submissionId,
+      });
+
+      const participantScore = UpdateScore(
+        finalSubmission.contestId,
+        finalSubmission.userId,
+        finalSubmission.score,
+        finalSubmission.questionId
+      );
+
+      return res.send(participantScore);
     }
-    
-    res.send("Done");
-    
+
+    res.send("Callback called but submission was not a success... ");
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }
@@ -48,13 +59,11 @@ async function runCallBackHandler(req, res) {
       callbackBody,
       { upsert: true }
     );
-    
+
     res.send("Done");
-    
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }
 }
-
 
 module.exports = { subCallBackHandler, runCallBackHandler };

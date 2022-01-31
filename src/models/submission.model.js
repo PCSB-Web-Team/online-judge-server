@@ -22,3 +22,5 @@ const submissionSchema = new mongoose.Schema(
 const SubmissionModel = mongoose.model("submission", submissionSchema);
 
 module.exports = SubmissionModel;
+
+// Aryan- add virtual for question title

@@ -45,21 +45,17 @@ async function GetContestParticipants(req, res) {
   }
 }
 
-async function UpdateScore(req, res) {
-  const { contestId, userId, score, questionId } = req.body;
+const UpdateScore = async (contestId, userId, score, questionId) => {
 
   try {
     // checking if all the details have been received
     if (!contestId || !userId || !score || !questionId)
-      return res
-        .status(401)
-        .send(
-          "Please Send All the fields( contestId, userId, score, questionId)"
-        );
+      return "Please Send All the fields( contestId, userId, score, questionId)";
+        
 
     // serching the participant using the userId and contestId.
     let participant = await Participant.findOne({ contestId, userId });
-    if (!participant) res.send("Participant does not exist");
+    if (!participant) return "Participant does not exist"; 
 
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
@@ -77,11 +73,14 @@ async function UpdateScore(req, res) {
     // saving the updated doc to mongo
     participant.individualScore = { ...participant.individualScore };
     await participant.save();
-    res.send(participant);
+    return participant;
+
   } catch (err) {
-    res.status(401).send(err.message);
+    return err.message;
   }
+
 }
+
 
 module.exports = {
   AddParticipant,

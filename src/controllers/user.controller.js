@@ -25,3 +25,5 @@ async function registerContest(req, res) {
 
 
 module.exports = { registerContest };
+
+//Aryan - Remove User Controller

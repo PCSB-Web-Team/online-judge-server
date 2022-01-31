@@ -3,12 +3,12 @@ const {
   AddParticipant,
   GetContestParticipants,
   GetAllParticipants,
-  UpdateScore,
+  // UpdateScore,
 } = require("../controllers/participant.controller");
 
 ParticipantRouter.post("/", AddParticipant);
 ParticipantRouter.get("/", GetAllParticipants);
 ParticipantRouter.get("/ranking/:contestId", GetContestParticipants);
-ParticipantRouter.put("/update-score", UpdateScore);
+// ParticipantRouter.put("/update-score", UpdateScore);
 
 module.exports = ParticipantRouter;
