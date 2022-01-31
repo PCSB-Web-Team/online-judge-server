@@ -41,7 +41,7 @@ async function runCallBackHandler(req, res) {
     const callbackBody = req.body;
 
     // Update the Run Model with body
-    const executionBody = await Run.findOneAndUpdate(
+    const runBody = await Run.findOneAndUpdate(
       { token: callbackBody.token },
       callbackBody,
       { upsert: true }

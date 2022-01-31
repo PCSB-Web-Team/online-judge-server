@@ -68,17 +68,13 @@ async function submit(req, res) {
 // Token received back from Judge0 is then used to get the output (stdout)
 
 async function run(req, res) {
-  const { languageId, code, userId, questionId, contestId, stdin } = req.body;
+  const { languageId, code, stdin } = req.body;
 
   try {
-    if ( languageId && code && userId && questionId && contestId ) {
+    if ( languageId && code ) {
 
       // Create a new Run Submission when user clicks on Run
-      const newRun = await Run.create({
-        userId: userId,
-        contestId: contestId,
-        questionId: questionId,
-      });
+      const newRun = await Run.create({});
 
       // Encode Input (stdin) and code (source_code) to base64
       const encodedStdin = Buffer.from(stdin).toString("base64");
