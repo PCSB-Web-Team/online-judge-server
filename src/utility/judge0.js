@@ -62,7 +62,7 @@ async function runBatch(data) {
 
     console.log("Run Batch Processed");
 
-    // Create n executions in DB with (n tokens)*times
+    // Create n runs in DB with (n tokens)*times
     for (let i = 0; i < tokens.length; i++) {
       await Run.findOneAndUpdate(
         { _id: data[i].runId },
@@ -71,7 +71,7 @@ async function runBatch(data) {
       );
     }
 
-    // Next : The status recieved by Judge0 on callback will change the submission model
+    // Next : The status recieved by Judge0 on callback will change the run model
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }
