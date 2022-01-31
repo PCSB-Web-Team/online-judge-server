@@ -73,7 +73,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
     // saving the updated doc to mongo
     participant.individualScore = { ...participant.individualScore };
     await participant.save();
-    return console.log(participant);
+    return console.log("Updated participant Id: " + participant._id);
 
   } catch (err) {
     return err.message;

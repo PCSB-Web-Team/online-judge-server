@@ -28,7 +28,13 @@ async function submit(req, res) {
       });
 
       // Find Question by questionId and save Test Cases
-      const question = await Question.findById(questionId);
+      const question = await Question.findOne({_id: questionId, contestId: contestId});
+      
+      if(!question) {
+        console.log("Question not found")
+        return res.status(404).send("Question Not Found");
+      }
+      
       const testCase = question.example;
       const maxScore = question.score;
 
