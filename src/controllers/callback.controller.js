@@ -4,7 +4,7 @@ const Run = require("../models/run.model");
 
 // Receive data from Judge0 and update it in Execution 
 // Then count passed testCases submissions and update score in Submission Model
-// Note: Data received here is through PUT request on ./callback/ by Judge0
+// Note: Data received here is through PUT request on ./callback/sub by Judge0
 
 async function subCallBackHandler(req, res) {
   try {
@@ -35,6 +35,8 @@ async function subCallBackHandler(req, res) {
   }
 }
 
+// Receive data from Judge0 and update it in Run
+// Note: Data received here is through PUT request on ./callback/run by Judge0
 
 async function runCallBackHandler(req, res) {
   try {
