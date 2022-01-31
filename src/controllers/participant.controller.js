@@ -46,16 +46,14 @@ async function GetContestParticipants(req, res) {
 }
 
 const UpdateScore = async (contestId, userId, score, questionId) => {
-
   try {
     // checking if all the details have been received
     if (!contestId || !userId || !score || !questionId)
       return "Please Send All the fields( contestId, userId, score, questionId)";
-        
 
     // serching the participant using the userId and contestId.
-    let participant = await Participant.findOne({ contestId, userId });
-    if (!participant) return "Participant does not exist"; 
+    let participant = await Participant.findOne({ contestId, userId }).lean();
+    if (!participant) return "Participant does not exist";
 
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
@@ -72,15 +70,15 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
 
     // saving the updated doc to mongo
     participant.individualScore = { ...participant.individualScore };
-    await participant.save();
+    await Participant.updateOne(
+      { _id: participant._id },
+      { $set: { individualScore: participant.individualScore } }
+    );
     return participant;
-
   } catch (err) {
     return err.message;
   }
-
-}
-
+};
 
 module.exports = {
   AddParticipant,
