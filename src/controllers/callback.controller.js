@@ -22,7 +22,7 @@ async function subCallBackHandler(req, res) {
     if (callbackBody.status.id == 3) {
       const updatedSubmission = await Submission.updateOne(
         { _id: executionBody.submissionId },
-        { $inc: { score: 10, passedCases: 1 } },
+        { $inc: { score: 10 } },
         { upsert: true }
       );
 
