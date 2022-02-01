@@ -30,7 +30,7 @@ async function subCallBackHandler(req, res) {
         _id: executionBody.submissionId,
       });
 
-      const participantScore = UpdateScore(
+      const participantScore = await UpdateScore(
         finalSubmission.contestId,
         finalSubmission.userId,
         finalSubmission.score,
