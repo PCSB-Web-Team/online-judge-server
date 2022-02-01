@@ -15,13 +15,6 @@ async function submit(req, res) {
   try {
     if (languageId && userId && questionId && contestId && code) {
 
-      // Create a new Submision when user clicks on Submit
-      const newSubmission = await Submission.create({
-        userId: userId,
-        contestId: contestId,
-        questionId: questionId,
-      });
-
       // Find Question by questionId and save Test Cases
       const question = await Question.findOne({_id: questionId, contestId: contestId});
       
@@ -32,6 +25,15 @@ async function submit(req, res) {
       
       const testCase = question.example;
       const maxScore = question.score;
+
+      // Create a new Submision when user clicks on Submit
+      const newSubmission = await Submission.create({
+        userId: userId,
+        contestId: contestId,
+        questionId: questionId,
+        maxScore: maxScore,
+        maxCases: testCase.length
+      });
 
       // Encode Input (stdin), Output (expected_output) and code (source_code) to base64
       const testInput = testCase.map(({ input }) =>

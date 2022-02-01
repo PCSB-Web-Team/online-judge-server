@@ -11,9 +11,19 @@ const submissionSchema = new mongoose.Schema(
     questionId: {
       type: mongoose.SchemaTypes.ObjectId,
     },
+    maxScore: {
+      type: Number,
+    },
     score: {
       type: Number,
-      default: 0
+      default: 0,
+    },
+    maxCases: {
+      type: Number,
+    },
+    passedCases: {
+      type: Number,
+      default: 0,
     },
   },
   { _id: true, strict: false }
