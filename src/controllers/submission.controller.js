@@ -1,7 +1,6 @@
 const Submission = require("../models/submission.model");
 const Run = require("../models/run.model");
 const Question = require("../models/question.model");
-const { updateSolved } = require("../controllers/user.controller");
 const axios = require("axios");
 const { produceSubmission } = require("../utility/submission.queue");
 const { produceRun } = require("../utility/run.queue");
