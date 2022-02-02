@@ -16,7 +16,7 @@ async function submit(req, res) {
     if (languageId && userId && questionId && contestId && code) {
 
       // Find Question by questionId and save Test Cases
-      const question = await Question.findOne({_id: questionId, contestId: contestId});
+      const question = await Question.findOne({_id: questionId, contestId: contestId}).lean();
       
       if(!question) {
         console.log("Question not found")

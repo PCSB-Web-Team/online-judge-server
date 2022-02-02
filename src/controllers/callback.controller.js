@@ -10,7 +10,7 @@ const { UpdateScore } = require("../controllers/participant.controller");
 async function subCallBackHandler(req, res) {
   try {
     const callbackBody = req.body;
-    console.log("here")
+    console.log("here");
     // Update the Execution Model with body
     const executionBody = await Execution.findOneAndUpdate(
       { token: callbackBody.token },
@@ -22,7 +22,7 @@ async function subCallBackHandler(req, res) {
     if (callbackBody.status.id == 3) {
       const updatedSubmission = await Submission.updateOne(
         { _id: executionBody.submissionId },
-        { $inc: { score: 10 } },
+        { $inc: { score: 10, passedCases: 1 } },
         { upsert: true }
       );
 
