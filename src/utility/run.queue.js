@@ -12,7 +12,10 @@ var timeOut;
 // this function will create a timeout promise and store the value in timeOut variable
 function startTimeOut() {
   timeOut = setTimeout(() => {
-    if (list.length) runBatch(list);
+    if (list.length) {
+      runBatch(list);
+      list = [];
+    }
   }, 10000);
 }
 
