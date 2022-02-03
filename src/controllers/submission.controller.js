@@ -25,12 +25,14 @@ async function submit(req, res) {
       
       const testCase = question.example;
       const maxScore = question.score;
+      const questionName = question.title;
 
       // Create a new Submision when user clicks on Submit
       const newSubmission = await Submission.create({
         userId: userId,
         contestId: contestId,
         questionId: questionId,
+        questionName: questionName,
         maxScore: maxScore,
         maxCases: testCase.length
       });
