@@ -52,8 +52,14 @@ async function run(req, res) {
       const stdout = Buffer.from(getResult.data.stdout, "base64").toString(
         "ascii"
       );
+      const message = Buffer.from(getResult.data.message, "base64").toString(
+        "ascii"
+      );
+      const stderr = Buffer.from(getResult.data.stderr, "base64").toString(
+        "ascii"
+      );
       
-      res.send(stdout);
+      res.send({stdout: stdout, message: message, stderr: stderr, status: getResult.data.status, time: getResult.data.time, memory: getResult.data.memory});
     } else {
       res.status(400).send("Invalid data received, code or language missing");
     }
