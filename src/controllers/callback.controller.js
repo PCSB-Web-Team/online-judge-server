@@ -10,7 +10,7 @@ const { UpdateScore } = require("../controllers/participant.controller");
 async function subCallBackHandler(req, res) {
   try {
     const callbackBody = req.body;
-    
+    console.log(callbackBody)
     // Update the Execution Model with body
     const executionBody = await Execution.findOneAndUpdate(
       { token: callbackBody.token },
