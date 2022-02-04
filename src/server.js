@@ -3,12 +3,12 @@ const dotenv = require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const connect = require("../src/db/connect");
 const Router = require("./routers");
-const cors = require('cors');
+const cors = require("cors");
 const { events } = require("./models/contest.model");
 
 const app = express();
 
-app.use(cors())
+app.use(cors());
 
 app.use(express.json());
 app.use(

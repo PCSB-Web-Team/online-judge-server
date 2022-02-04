@@ -3,7 +3,8 @@ const Question = require("../models/question.model");
 const { produceSubmission } = require("../utility/submission.queue");
 
 // This is where Judge0 will send back the status of code execution
-const subCallBackURL = "https://online-judge-test.herokuapp.com/api/callback/sub";
+const subCallBackURL =
+  "https://online-judge-test.herokuapp.com/api/callback/sub";
 
 // Create Submission by sending Judge0 with source_code, language_id and callback_url
 // Token received back from Judge0 is stored along with code and other important ids
@@ -14,15 +15,17 @@ async function submit(req, res) {
 
   try {
     if (languageId && userId && questionId && contestId && code) {
-
       // Find Question by questionId and save Test Cases
-      const question = await Question.findOne({_id: questionId, contestId: contestId}).lean();
-      
-      if(!question) {
-        console.log("Question not found")
+      const question = await Question.findOne({
+        _id: questionId,
+        contestId: contestId,
+      }).lean();
+
+      if (!question) {
+        console.log("Question not found");
         return res.status(404).send("Question Not Found");
       }
-      
+
       const testCase = question.example;
       const maxScore = question.score;
 
@@ -32,7 +35,7 @@ async function submit(req, res) {
         contestId: contestId,
         questionId: questionId,
         maxScore: maxScore,
-        maxCases: testCase.length
+        maxCases: testCase.length,
       });
 
       // Encode Input (stdin), Output (expected_output) and code (source_code) to base64
@@ -58,7 +61,6 @@ async function submit(req, res) {
       postData.map((data) => produceSubmission(data));
 
       res.send(newSubmission._id);
-
     } else {
       res.status(400).send("Invalid data received, send valid data");
     }
@@ -66,7 +68,6 @@ async function submit(req, res) {
     res.status(400).send(err.message);
   }
 }
-
 
 // Get submission if exists using ./submission/:token
 

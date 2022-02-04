@@ -21,7 +21,6 @@ function startTimeOut() {
 
 // Redis Consumer : Executing after Producer adds data to queue
 const runProcess = async (job) => {
-
   // first clear the timeout that is running
   clearTimeout(timeOut);
 

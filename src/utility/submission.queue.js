@@ -2,7 +2,10 @@ const Bull = require("bull");
 const { submissionBatch } = require("./judge0");
 
 const submissionQueue = new Bull("submissions", {
-  redis: "redis:6379",
+  redis: {
+    host: process.env.redisHost || "127.0.0.1",
+    port: 6379
+  },
 });
 
 var list = [];
@@ -23,6 +26,8 @@ function startTimeOut() {
 const submissionProcess = async (job) => {
   // first clear the timeout that is running
   clearTimeout(timeOut);
+
+  console.log("Processing");
 
   // Push data to array list
   list.push(job.data);
