@@ -46,21 +46,16 @@ async function run(req, res) {
       });
       
       if (!getResult) return res.status(409).send("Run code unable to process. Try again");
-
-      if(!getResult.data.stdout) return res.send(null);
       
       const stdout = Buffer.from(getResult.data.stdout || "", "base64").toString(
         "ascii"
       );
-      console.log(stdout)
       const message = Buffer.from(getResult.data.message || "", "base64").toString(
         "ascii"
       );
-      console.log(message)
       const stderr = Buffer.from(getResult.data.stderr || "", "base64").toString(
         "ascii"
       );
-      console.log(stderr)
       res.send({stdout: stdout, message: message, stderr: stderr, status: getResult.data.status, time: getResult.data.time, memory: getResult.data.memory});
     } else {
       res.status(400).send("Invalid data received, code or language missing");
