@@ -19,7 +19,7 @@ async function AddParticipant(req, res) {
       return res.status(401).send("Already participated in this contest");
 
     // creating the new participant
-    const newParticipation = await Participant.create({ userId, contestId });
+    const newParticipation = await Participant.create({ userId, name: user.name, contestId });
     res.send(newParticipation);
   } catch (err) {
     res.status(401).send(err.message);
