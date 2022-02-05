@@ -11,7 +11,7 @@ const SubmissionRouter = require("express").Router();
 
 SubmissionRouter.get("/user/:userId", getUserSubmissions);
 SubmissionRouter.get("/:userId/:questionId", getUserSubmissionForQuestion);
-SubmissionRouter.get("/:token", getSubmission);
+SubmissionRouter.get("/:submissionId", getSubmission);
 SubmissionRouter.post("/", submit);
 SubmissionRouter.get("/", getAllSubmissions);
 
