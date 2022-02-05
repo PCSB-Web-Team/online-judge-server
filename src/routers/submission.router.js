@@ -13,7 +13,7 @@ const SubmissionRouter = require("express").Router();
 SubmissionRouter.get("/user/:userId", getUserSubmissions);
 SubmissionRouter.post("/run", run);
 SubmissionRouter.get("/:userId/:questionId", getUserSubmissionForQuestion);
-SubmissionRouter.get("/:token", getSubmission);
+SubmissionRouter.get("/:id", getSubmission);
 SubmissionRouter.get("/", getAllSubmissions);
 
 module.exports = SubmissionRouter;

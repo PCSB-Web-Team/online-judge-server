@@ -10,11 +10,10 @@ async function run(req, res) {
   const { languageId, code, stdin } = req.body;
 
   try {
-    if( languageId && code ){
-
+    if (languageId && code) {
       const encodedStdin = Buffer.from(stdin).toString("base64");
       const encodedCode = Buffer.from(code).toString("base64");
-      
+
       let postResult = await axios({
         method: "POST",
         url: "https://judge0-ce.p.rapidapi.com/submissions",
@@ -22,7 +21,8 @@ async function run(req, res) {
         headers: {
           "content-type": "application/json",
           "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-          "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+          "x-rapidapi-key":
+            "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
         },
         data: {
           language_id: languageId,
@@ -30,9 +30,10 @@ async function run(req, res) {
           stdin: encodedStdin,
         },
       });
-      
-      if (!postResult) return res.status(409).send("Run code unable to process. Try again");
-     
+
+      if (!postResult)
+        return res.status(409).send("Run code unable to process. Try again");
+
       const token = postResult.data.token;
 
       let getResult = await axios({
@@ -41,22 +42,34 @@ async function run(req, res) {
         params: { base64_encoded: "true", fields: "*" },
         headers: {
           "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-          "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+          "x-rapidapi-key":
+            "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
         },
       });
-      
-      if (!getResult) return res.status(409).send("Run code unable to process. Try again");
-      
-      const stdout = Buffer.from(getResult.data.stdout || "", "base64").toString(
-        "ascii"
-      );
-      const message = Buffer.from(getResult.data.message || "", "base64").toString(
-        "ascii"
-      );
-      const stderr = Buffer.from(getResult.data.stderr || "", "base64").toString(
-        "ascii"
-      );
-      res.send({stdout: stdout, message: message, stderr: stderr, status: getResult.data.status, time: getResult.data.time, memory: getResult.data.memory});
+
+      if (!getResult)
+        return res.status(409).send("Run code unable to process. Try again");
+
+      const stdout = Buffer.from(
+        getResult.data.stdout || "",
+        "base64"
+      ).toString("ascii");
+      const message = Buffer.from(
+        getResult.data.message || "",
+        "base64"
+      ).toString("ascii");
+      const stderr = Buffer.from(
+        getResult.data.stderr || "",
+        "base64"
+      ).toString("ascii");
+      res.send({
+        stdout: stdout,
+        message: message,
+        stderr: stderr,
+        status: getResult.data.status,
+        time: getResult.data.time,
+        memory: getResult.data.memory,
+      });
     } else {
       res.status(400).send("Invalid data received, code or language missing");
     }
@@ -69,7 +82,7 @@ async function run(req, res) {
 
 async function getSubmission(req, res) {
   try {
-    const submission = await Submission.findOne({ token: req.params.token });
+    const submission = await Submission.findOne({ _id: req.params.id });
 
     if (submission) {
       res.send(submission);
@@ -123,4 +136,3 @@ module.exports = {
   getUserSubmissions,
   getUserSubmissionForQuestion,
 };
-
