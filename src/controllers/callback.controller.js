@@ -10,7 +10,7 @@ const { UpdateScore } = require("../controllers/participant.controller");
 async function subCallBackHandler(req, res) {
   try {
     const callbackBody = req.body;
-    console.log("callback hit")
+    
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(callbackBody.stdout || "", "base64").toString("ascii");
     callbackBody.message = Buffer.from(callbackBody.message || "", "base64").toString("ascii");
@@ -25,7 +25,7 @@ async function subCallBackHandler(req, res) {
     );
     // If status of submission is Accepted ( 3 ) then update score
     if (callbackBody.status.id == 3) {
-      console.log("inside if")
+
       const updatedSubmission = await Submission.updateOne(
         { _id: executionBody.submissionId },
         { $inc: { score: 10, passedCases: 1 } },
