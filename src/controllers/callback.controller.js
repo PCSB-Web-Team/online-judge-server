@@ -53,6 +53,7 @@ async function runCallBackHandler(req, res) {
   try {
     const callbackBody = req.body;
 
+    // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(callbackBody.stdout || "", "base64").toString("ascii");
     callbackBody.message = Buffer.from(callbackBody.message || "", "base64").toString("ascii");
     callbackBody.stderr = Buffer.from(callbackBody.stderr || "", "base64").toString("ascii");
