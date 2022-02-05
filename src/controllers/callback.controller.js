@@ -34,12 +34,13 @@ async function subCallBackHandler(req, res) {
     // If status of submission is Accepted ( 3 ) then update score
     if (callbackBody.status.id == 3) {
       // Update the Execution Model with body
-      const executionBody = await Execution.findOne(
+      const executionBody = await Execution.findOneAndUpdate(
         { token: callbackBody.token },
-        callbackBody
-      );
+        callbackBody,
+        { new: true }
+      ).lean();
 
-      console.log("Updated the status");
+      console.log("Updated the status", executionBody);
 
       const updatedSubmission = await Submission.updateOne(
         { _id: executionBody.submissionId },
