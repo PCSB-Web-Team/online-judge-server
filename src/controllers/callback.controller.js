@@ -10,6 +10,8 @@ const { UpdateScore } = require("../controllers/participant.controller");
 async function subCallBackHandler(req, res) {
   try {
     const callbackBody = req.body;
+   
+    console.log("Call back hit");
     
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(callbackBody.stdout || "", "base64").toString("ascii");
