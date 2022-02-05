@@ -2,8 +2,7 @@ const Run = require("../models/run.model");
 const { produceRun } = require("../utility/run.queue");
 
 // This is where Judge0 will send back the status of code execution
-const runCallBackURL =
-  "https://online-judge-test.herokuapp.com/api/callback/run";
+const runCallBackURL = `${process.env.callBack}/callback/run`;
 
 // Run code by sending Judge0 with source_code, language_id and sample_input (stdin)
 // Token received back from Judge0 is then used to get the output (stdout)
