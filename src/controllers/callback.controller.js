@@ -11,7 +11,7 @@ async function subCallBackHandler(req, res) {
   try {
     const callbackBody = req.body;
 
-    console.log("Call back hit");
+    console.log("Call back hit", callbackBody.status);
 
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(
@@ -40,7 +40,7 @@ async function subCallBackHandler(req, res) {
         { new: true }
       ).lean();
 
-      console.log("Updated the status", executionBody);
+      console.log("Updated the status", executionBody.status);
 
       const updatedSubmission = await Submission.updateOne(
         { _id: executionBody.submissionId },
