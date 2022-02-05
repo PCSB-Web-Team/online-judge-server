@@ -17,4 +17,5 @@ participantSchema.index({ userId: 1, contestId: 1 }, { unique: true });
 
 const Participant = mongoose.model("Participant", participantSchema);
 
+
 module.exports = Participant;

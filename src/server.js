@@ -22,8 +22,6 @@ app.use("/api", Router);
 
 let port = process.env.PORT;
 
-console.log(process.env.PORT)
-
 if (port == null || port == "") {
   port = 4000;
 }

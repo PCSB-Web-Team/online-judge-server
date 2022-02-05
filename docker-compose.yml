@@ -13,8 +13,7 @@ services:
     ports:
       - "80:3000"
     volumes:
-      - .:/home/node/code
-      - /home/node/code/node_modules
+      - .:/oj
     links:
       - redis:redis
     env_file:
