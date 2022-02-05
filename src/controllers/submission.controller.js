@@ -54,6 +54,8 @@ async function submit(req, res) {
         stdin: element,
         expected_output: testOutput[index],
         callback_url: subCallBackURL,
+        number_of_runs: 1,
+        max_number_of_runs: 1,
         submissionId: newSubmission._id,
       }));
 
