@@ -11,21 +11,15 @@ services:
   web:
     build: .
     ports:
-      - "4000:4000"
+      - "4000:3000"
     volumes:
       - .:/home/node/code
       - /home/node/code/node_modules
     links:
       - redis:redis
-    environment:
-      - port = 4000
-      - JWT_SECRET = 8feafcc77333d8859739ea2f1d8e710de4d9a45985056d1e065690359f4c2d39
-      - REFRESH_JWT_SECRET = 41fd5367ea9ee5e391635cc3b24b20ab3e44817c766fed588bb5bae83d95ed7c
-      - PASSWORD_ENCRYPTION_SALT = 10
-      - mongoURI = "mongodb+srv://vedant:vedant123@main.qdfxr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-      - redisHost = redis
+    env_file:
+      - .env
     networks:
       - webnet
 networks:
   webnet:
-  
