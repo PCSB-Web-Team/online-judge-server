@@ -10,7 +10,7 @@ COPY package.json /oj
 
 COPY package-lock.json /oj
 
-RUN npm ci
+RUN npm i
 
 COPY . /oj
 
