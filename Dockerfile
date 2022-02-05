@@ -1,5 +1,7 @@
 FROM node:12-alpine
 
+RUN npm i -g nodemon
+
 RUN mkdir /oj
 
 WORKDIR /oj

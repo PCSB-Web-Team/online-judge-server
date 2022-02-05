@@ -5,7 +5,6 @@ const { produceSubmission } = require("../utility/submission.queue");
 
 // This is where Judge0 will send back the status of code execution
 const subCallBackURL = `${process.env.callBack}/callback/sub`;
-console.log(subCallBackURL)
 
 // Create Submission by sending Judge0 with source_code, language_id and callback_url
 // Token received back from Judge0 is stored along with code and other important ids
@@ -13,7 +12,6 @@ console.log(subCallBackURL)
 
 async function submit(req, res) {
   const { languageId, code, userId, questionId, contestId } = req.body;
-  console.log("here")
   try {
     if (languageId && userId && questionId && contestId && code) {
       // Find Question by questionId and save Test Cases
@@ -71,7 +69,6 @@ async function submit(req, res) {
   }
 }
 
-
 // Get submission if exists using ./submission/:submissionId
 
 async function getSubmission(req, res) {
@@ -79,11 +76,9 @@ async function getSubmission(req, res) {
     const submissionId = req.params.submissionId;
     const submission = await Submission.findOne({ _id: submissionId });
     if (submission) {
+      const executions = await Execution.find({ submissionId: submissionId });
 
-      const executions = await Execution.find({submissionId: submissionId});
-
-      res.send({submission: submission, executions: executions});
-      
+      res.send({ submission: submission, executions: executions });
     } else {
       res.status(404).send("No submissions exists with such token");
     }
