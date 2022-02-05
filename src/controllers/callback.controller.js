@@ -2,7 +2,7 @@ const Submission = require("../models/submission.model");
 const Execution = require("../models/execution.model");
 const Run = require("../models/run.model");
 const { UpdateScore } = require("../controllers/participant.controller");
-const { subCallBackQueue } = require("../utility/subCallBack.quque");
+const { subCallBackQueue } = require("../utility/subCallBack.queue");
 
 // Receive data from Judge0 and update it in Execution
 // Then count passed testCases submissions and update score in Submission Model
