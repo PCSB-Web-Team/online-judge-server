@@ -22,7 +22,6 @@ async function submit(req, res) {
       }).lean();
 
       if (!question) {
-        console.log("Question not found");
         return res.status(404).send("Question Not Found");
       }
 

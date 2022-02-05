@@ -5,8 +5,6 @@ const Contest = require("../models/contest.model");
 async function newContest(req, res) {
   const { title, startsOn, endsOn } = req.body;
 
-  console.log("Creating");
-
   try {
     if (title && startsOn && endsOn) {
       const newContest = await Contest.create({ title, startsOn, endsOn });

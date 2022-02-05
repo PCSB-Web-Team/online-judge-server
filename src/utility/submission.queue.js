@@ -27,8 +27,6 @@ const submissionProcess = async (job) => {
   // first clear the timeout that is running
   clearTimeout(timeOut);
 
-  console.log("Processing");
-
   // Push data to array list
   list.push(job.data);
 
