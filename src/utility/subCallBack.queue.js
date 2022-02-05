@@ -34,8 +34,12 @@ const submissionProcess = async (job) => {
       "base64"
     ).toString("ascii");
 
+    const foundExecution = await Execution.findOne({
+      token: callbackBody.token,
+    }).lean();
+
     // If status of submission is Accepted ( 3 ) then update score
-    if (callbackBody.status.id == 3) {
+    if (callbackBody.status.id === 3 && foundExecution.status.id !== 3) {
       // Update the Execution Model with body
       const executionBody = await Execution.findOneAndUpdate(
         { token: callbackBody.token },

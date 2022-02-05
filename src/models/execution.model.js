@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 const executionSchema = new mongoose.Schema(
   {
     submissionId: {
-        type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
     },
     token: {
-        type: String,
+      type: String,
     },
     stdout: {
       type: String,
@@ -33,8 +33,8 @@ const executionSchema = new mongoose.Schema(
       default: null,
     },
     status: {
-      id: { type: String, default: 0 , required: true},
-      description: { type: String, default: "Processing", required: true},
+      id: { type: Number, default: 0, required: true },
+      description: { type: String, default: "Processing", required: true },
     },
   },
   { _id: true, strict: false }
