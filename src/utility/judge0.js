@@ -25,7 +25,7 @@ async function submissionBatch(data) {
 
     console.log("Submission Batch Processed");
 
-    console.log(token.length);
+    console.log(tokens.length);
 
     // Create n executions in DB with (n tokens)*times
     for (let i = 0; i < tokens.length; i++) {
