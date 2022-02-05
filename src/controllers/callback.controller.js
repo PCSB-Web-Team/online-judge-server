@@ -10,7 +10,7 @@ const { UpdateScore } = require("../controllers/participant.controller");
 async function subCallBackHandler(req, res) {
   try {
     const callbackBody = req.body;
-
+    
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(callbackBody.stdout || "", "base64").toString("ascii");
     callbackBody.message = Buffer.from(callbackBody.message || "", "base64").toString("ascii");
@@ -23,9 +23,9 @@ async function subCallBackHandler(req, res) {
       callbackBody,
       { upsert: true }
     );
-
     // If status of submission is Accepted ( 3 ) then update score
     if (callbackBody.status.id == 3) {
+
       const updatedSubmission = await Submission.updateOne(
         { _id: executionBody.submissionId },
         { $inc: { score: 10, passedCases: 1 } },
@@ -58,20 +58,20 @@ async function subCallBackHandler(req, res) {
 async function runCallBackHandler(req, res) {
   try {
     const callbackBody = req.body;
-
+    console.log("here")
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(callbackBody.stdout || "", "base64").toString("ascii");
     callbackBody.message = Buffer.from(callbackBody.message || "", "base64").toString("ascii");
     callbackBody.stderr = Buffer.from(callbackBody.stderr || "", "base64").toString("ascii");
     callbackBody.compile_output = Buffer.from(callbackBody.compile_output || "", "base64").toString("ascii");
-
+    console.log("now")
     // Update the Run Model with body
     const runBody = await Run.findOneAndUpdate(
       { token: callbackBody.token },
       callbackBody,
       { upsert: true }
     );
-
+      console.log("end")
     res.send("Done");
   } catch (err) {
     res.status(400).send("Error: " + err.message);

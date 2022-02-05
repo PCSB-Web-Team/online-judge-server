@@ -8,7 +8,7 @@ async function submissionBatch(data) {
     //  Call Judge0 and get n tokens
     let postResult = await axios({
       method: "POST",
-      url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
+      url: `${process.env.judge0}/submissions/batch`,
       params: { base64_encoded: "true" },
       headers: {
         "content-type": "application/json",
@@ -45,7 +45,7 @@ async function runBatch(data) {
     //  Call Judge0 and get n tokens
     let postResult = await axios({
       method: "POST",
-      url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
+      url: `${process.env.judge0}/submissions/batch`,
       params: { base64_encoded: "true" },
       headers: {
         "content-type": "application/json",

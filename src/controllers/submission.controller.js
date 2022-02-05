@@ -4,8 +4,8 @@ const Execution = require("../models/execution.model");
 const { produceSubmission } = require("../utility/submission.queue");
 
 // This is where Judge0 will send back the status of code execution
-const subCallBackURL =
-  "https://online-judge-test.herokuapp.com/api/callback/sub";
+const subCallBackURL = `${process.env.callBack}/callback/sub`;
+console.log(subCallBackURL)
 
 // Create Submission by sending Judge0 with source_code, language_id and callback_url
 // Token received back from Judge0 is stored along with code and other important ids
