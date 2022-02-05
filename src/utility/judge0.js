@@ -22,8 +22,10 @@ async function submissionBatch(data) {
 
     // Array of tokens recieved by Judge0
     const tokens = postResult.data.map(({ token }) => token);
-    
+
     console.log("Submission Batch Processed");
+
+    console.log(token.length);
 
     // Create n executions in DB with (n tokens)*times
     for (let i = 0; i < tokens.length; i++) {
@@ -66,7 +68,7 @@ async function runBatch(data) {
     for (let i = 0; i < tokens.length; i++) {
       await Run.findOneAndUpdate(
         { _id: data[i].runId },
-        { token: tokens[i]},
+        { token: tokens[i] },
         { upsert: true }
       );
     }
