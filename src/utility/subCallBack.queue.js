@@ -68,4 +68,4 @@ const submissionProcess = async (callbackBody) => {
 
 subCallBackQueue.process(submissionProcess);
 
-module.exports = { subCallBackQueue, produceSubmission };
+module.exports = { subCallBackQueue };
