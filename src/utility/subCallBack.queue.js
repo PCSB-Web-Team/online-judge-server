@@ -11,7 +11,8 @@ const subCallBackQueue = new Bull("subCallback", {
 });
 
 // Redis Consumer : Executing after Producer adds data to queue
-const submissionProcess = async (callbackBody) => {
+const submissionProcess = async (job) => {
+  const callbackBody = job.data;
   try {
     console.log("Call back hit", callbackBody.status);
 
