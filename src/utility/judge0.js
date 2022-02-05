@@ -35,7 +35,7 @@ async function submissionBatch(data) {
 
     // Next : The status recieved by Judge0 on callback will change the submission model
   } catch (err) {
-    res.status(400).send("Error: " + err.message);
+    console.log(err.message)
   }
 }
 
@@ -73,7 +73,7 @@ async function runBatch(data) {
 
     // Next : The status recieved by Judge0 on callback will change the run model
   } catch (err) {
-    res.status(400).send("Error: " + err.message);
+    console.log(err.message)
   }
 }
 
