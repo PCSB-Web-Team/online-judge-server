@@ -1,5 +1,6 @@
 const Submission = require("../models/submission.model");
 const Question = require("../models/question.model");
+const Execution = require("../models/execution.model");
 const { produceSubmission } = require("../utility/submission.queue");
 
 // This is where Judge0 will send back the status of code execution
@@ -70,14 +71,18 @@ async function submit(req, res) {
 }
 
 
-// Get submission if exists using ./submission/:token
+// Get submission if exists using ./submission/:submissionId
 
 async function getSubmission(req, res) {
   try {
-    const submission = await Submission.findOne({ token: req.params.token });
-
+    const submissionId = req.params.submissionId;
+    const submission = await Submission.findOne({ _id: submissionId });
     if (submission) {
-      res.send(submission);
+
+      const executions = await Execution.find({submissionId: submissionId});
+
+      res.send({submission: submission, executions: executions});
+      
     } else {
       res.status(404).send("No submissions exists with such token");
     }
