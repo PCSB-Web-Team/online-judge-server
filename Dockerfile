@@ -12,6 +12,6 @@ RUN npm ci
 
 COPY . /oj
 
-EXPOSE 4000
+EXPOSE 3000
 
 CMD [ "npm", "start" ]
