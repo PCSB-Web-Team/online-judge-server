@@ -1,5 +1,5 @@
 const Run = require("../models/run.model");
-const { produceRun } = require("../utility/run.queue");
+const { produceRun, runQueue } = require("../utility/run.queue");
 
 // This is where Judge0 will send back the status of code execution
 const runCallBackURL = `${process.env.callBack}/callback/run`;
@@ -29,7 +29,7 @@ async function run(req, res) {
       };
 
       // Calling Redis to make Queue
-      produceRun(postData);
+      runQueue.add(postData)
 
       res.send(newRun._id);
     } else {
