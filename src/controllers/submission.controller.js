@@ -75,10 +75,10 @@ async function submit(req, res) {
 
 async function getSubmission(req, res) {
   try {
-    const submissionId = req.params.submissionId;
-    const submission = await Submission.findOne({ _id: submissionId });
+    const submission = await Submission.findOne({ _id: req.params.submissionId });
+
     if (submission) {
-      const executions = await Execution.find({ submissionId: submissionId });
+      const executions = await Execution.find({ submissionId: submission._id });
 
       res.send({ submission: submission, executions: executions });
     } else {
