@@ -19,7 +19,11 @@ async function AddParticipant(req, res) {
       return res.status(401).send("Already participated in this contest");
 
     // creating the new participant
-    const newParticipation = await Participant.create({ userId, name: user.name, contestId });
+    const newParticipation = await Participant.create({
+      userId,
+      name: user.name,
+      contestId,
+    });
     res.send(newParticipation);
   } catch (err) {
     res.status(401).send(err.message);
@@ -83,9 +87,27 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
   }
 };
 
+async function CheckParticipantIsRegistered(req, res) {
+  const { userId, contestId } = req.params;
+
+  try {
+    if (!userId || !contestId)
+      return res.status(400).send("Send Both userId and ContestId");
+
+    const participant = Participant.findOne({ userId, contestId });
+
+    if (participant) return res.send(true);
+
+    res.send(false);
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
+
 module.exports = {
   AddParticipant,
   GetContestParticipants,
   GetAllParticipants,
   UpdateScore,
+  CheckParticipantIsRegistered,
 };
