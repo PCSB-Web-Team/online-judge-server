@@ -94,7 +94,10 @@ async function CheckParticipantIsRegistered(req, res) {
     if (!userId || !contestId)
       return res.status(400).send("Send Both userId and ContestId");
 
-    const participant = Participant.findOne({ userId, contestId });
+    const participant = await Participant.findOne({
+      userId: userId,
+      contestId: contestId,
+    }).lean();
 
     if (participant) return res.send(true);
 
