@@ -47,8 +47,6 @@ const submissionProcess = async (job) => {
         { new: true }
       ).lean();
 
-      console.log("Updated the status", executionBody.status);
-
       const updatedSubmission = await Submission.updateOne(
         { _id: executionBody.submissionId },
         { $inc: { score: 10, passedCases: 1 } },
