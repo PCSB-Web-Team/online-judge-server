@@ -1,7 +1,7 @@
 const Bull = require("bull");
-const { submissionBatch } = require("./judge0");
+const { runBatch } = require("./judge0");
 
-const submissionQueue = new Bull("submissions", {
+const runQueue = new Bull("run", {
   redis: {
     host: process.env.redisHost || "127.0.0.1",
     port: 6379
@@ -16,23 +16,25 @@ var timeOut;
 function startTimeOut() {
   timeOut = setTimeout(() => {
     if (list.length) {
-      submissionBatch(list);
+      runBatch(list);
       list = [];
     }
   }, 10000);
 }
 
 // Redis Consumer : Executing after Producer adds data to queue
-const submissionProcess = async (job) => {
+const runProcess = async (job) => {
   // first clear the timeout that is running
+  
   clearTimeout(timeOut);
-
+  
   // Push data to array list
   list.push(job.data);
 
-  // If list length is n then send for Batch Submission (Judge0)
-  if (list.length == 10) {
-    submissionBatch(list);
+  // If list length is n then send for Batch Run (Judge0)
+  if (list.length == 5) {
+    
+    runBatch(list);
     list = [];
   } else {
     // start the timeout again for next 10 seconds
@@ -40,11 +42,6 @@ const submissionProcess = async (job) => {
   }
 };
 
-// Redis Producer : Adds data to queue
-function produceSubmission(data) {
-  submissionQueue.add(data);
-}
+runQueue.process(runProcess);
 
-submissionQueue.process(submissionProcess);
-
-module.exports = { submissionQueue, produceSubmission };
+module.exports = { runQueue };

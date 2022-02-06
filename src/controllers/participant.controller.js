@@ -19,7 +19,7 @@ async function AddParticipant(req, res) {
       return res.status(401).send("Already participated in this contest");
 
     // creating the new participant
-    const newParticipation = await Participant.create({ userId, contestId });
+    const newParticipation = await Participant.create({ userId, name: user.name, contestId });
     res.send(newParticipation);
   } catch (err) {
     res.status(401).send(err.message);
@@ -45,25 +45,25 @@ async function GetContestParticipants(req, res) {
   }
 }
 
-async function UpdateScore(req, res) {
-  const { contestId, userId, score, questionId } = req.body;
-
+const UpdateScore = async (contestId, userId, score, questionId) => {
   try {
     // checking if all the details have been received
     if (!contestId || !userId || !score || !questionId)
-      return res
-        .status(401)
-        .send(
-          "Please Send All the fields( contestId, userId, score, questionId)"
-        );
+      return console.log(
+        "Please Send All the fields( contestId, userId, score, questionId)"
+      );
 
     // serching the participant using the userId and contestId.
-    let participant = await Participant.findOne({ contestId, userId });
-    if (!participant) res.send("Participant does not exist");
+    let participant = await Participant.findOne({ contestId, userId }).lean();
+    if (!participant) return console.log("Participant does not exist");
 
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
-    participant.individualScore[questionId] = score;
+
+    participant.individualScore[questionId] = Math.max(
+      score,
+      participant.individualScore[questionId] || 0
+    );
 
     // calculating the total score
     let sum = 0;
@@ -71,17 +71,17 @@ async function UpdateScore(req, res) {
       sum += parseInt(value);
     });
 
-    // updating the total score
-    participant.score = sum;
-
     // saving the updated doc to mongo
     participant.individualScore = { ...participant.individualScore };
-    await participant.save();
-    res.send(participant);
+    await Participant.updateOne(
+      { _id: participant._id },
+      { $set: { individualScore: participant.individualScore, score: sum } }
+    );
+    return console.log("Updated participant Id: " + participant._id);
   } catch (err) {
-    res.status(401).send(err.message);
+    return err.message;
   }
-}
+};
 
 module.exports = {
   AddParticipant,

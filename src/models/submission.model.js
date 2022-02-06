@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Question = require("./question.model");
 
 const submissionSchema = new mongoose.Schema(
   {
@@ -11,59 +12,45 @@ const submissionSchema = new mongoose.Schema(
     questionId: {
       type: mongoose.SchemaTypes.ObjectId,
     },
-    languageId: {
-      type: Number,
-    },
-    code: {
+    questionName: {
       type: String,
+    },
+    maxScore: {
+      type: Number,
     },
     score: {
       type: Number,
       default: 0,
     },
-    token: {
-      type: String,
+    maxCases: {
+      type: Number,
     },
-    stdout: {
-      type: String,
-      default: null,
-    },
-    time: {
-      type: mongoose.Types.Decimal128,
-      default: 0,
-    },
-    memory: {
+    passedCases: {
       type: Number,
       default: 0,
-    },
-    stderr: {
-      type: String,
-      default: null,
-    },
-    compile_output: {
-      type: String,
-      default: null,
-    },
-    message: {
-      type: String,
-      default: null,
-    },
-    status: {
-      id: { type: String, default: 0 },
-      description: { type: String, default: "Processing" },
-    },
-    stdin: {
-      type: String,
-      default: null,
-    },
-    expected_output: {
-      type: String,
-      default: null,
     },
   },
   { _id: true, strict: false }
 );
 
+submissionSchema.set("toObject", { virtuals: true });
+submissionSchema.set("toJSON", { virtuals: true });
+
+submissionSchema.virtual("status").get(function () {
+
+  if (this.passedCases == 0) {
+    return "Processing / Rejected";
+  } else if (this.passedCases > 0 && this.passedCases < this.maxCases) {
+    return "Partially Accepted";
+  } else {
+    return "Accepted"
+  }
+
+});
+
 const SubmissionModel = mongoose.model("submission", submissionSchema);
 
 module.exports = SubmissionModel;
+
+// Aryan- add virtual for question title
+// aryan - submission find using token doubt

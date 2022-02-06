@@ -1,12 +1,18 @@
 const mongoose = require("mongoose");
 
-const executionSchema = new mongoose.Schema(
+const runSchema = new mongoose.Schema(
   {
-    submissionId: {
-      type: mongoose.Schema.Types.ObjectId,
+    userId: {
+      type: mongoose.SchemaTypes.ObjectId,
+    },
+    contestId: {
+      type: mongoose.SchemaTypes.ObjectId,
+    },
+    questionId: {
+      type: mongoose.SchemaTypes.ObjectId,
     },
     token: {
-      type: String,
+        type: String,
     },
     stdout: {
       type: String,
@@ -33,13 +39,13 @@ const executionSchema = new mongoose.Schema(
       default: null,
     },
     status: {
-      id: { type: Number, default: 0, required: true },
-      description: { type: String, default: "Processing", required: true },
+      id: { type: String, default: 0 , required: true},
+      description: { type: String, default: "Processing", required: true},
     },
   },
   { _id: true, strict: false }
 );
 
-const ExecutionModel = mongoose.model("execution", executionSchema);
+const RunModel = mongoose.model("run", runSchema);
 
-module.exports = ExecutionModel;
+module.exports = RunModel;

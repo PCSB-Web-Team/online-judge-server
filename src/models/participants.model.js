@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 const participantSchema = new mongoose.Schema({
   userId: { type: mongoose.SchemaTypes.ObjectId, required: true },
+  name: {type: String, required: true},
   contestId: { type: mongoose.SchemaTypes.ObjectId, required: true },
   individualScore: { type: {}, default: {}, required: true },
   score: {
@@ -15,5 +16,6 @@ const participantSchema = new mongoose.Schema({
 participantSchema.index({ userId: 1, contestId: 1 }, { unique: true });
 
 const Participant = mongoose.model("Participant", participantSchema);
+
 
 module.exports = Participant;

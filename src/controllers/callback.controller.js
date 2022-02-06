@@ -1,26 +1,23 @@
-const SubmissionModel = require("../models/submission.model");
+const Submission = require("../models/submission.model");
+const Execution = require("../models/execution.model");
+const Run = require("../models/run.model");
+const { UpdateScore } = require("../controllers/participant.controller");
+const { subCallBackQueue } = require("../utility/subCallBack.queue");
+const { runCallBackQueue } = require("../utility/runCallBack.queue");
 
-// const body = {
-//   stdout: "aGVsbG8sIEp1ZGdlMAo=\n",
-//   time: "0.002",
-//   memory: { $numberInt: "748" },
-//   stderr: null,
-//   token: "119271d3-d9e2-4380-8625-bcc26d1dcbdb",
-//   compile_output: null,
-//   message: null,
-//   status: { id: { $numberInt: "3" }, description: "Accepted" },
-// };
+// Receive data from Judge0 and update it in Execution
+// Then count passed testCases submissions and update score in Submission Model
+// Note: Data received here is through PUT request on ./callback/sub by Judge0
 
-// Receive data from Judge0 and update it in database
-// Note: Data received here is through PUT request on ./callback/ by Judge0
-
-async function callBackHandler(req, res) {
-  try {
-    const newSubmission = await SubmissionModel.create(req.body);
-    res.json(newSubmission);
-  } catch (err) {
-    res.status(400).send("Error: " + err.message);
-  }
+async function subCallBackHandler(req, res) {
+  subCallBackQueue.add(req.body);
 }
 
-module.exports = { callBackHandler };
+// Receive data from Judge0 and update it in Run
+// Note: Data received here is through PUT request on ./callback/run by Judge0
+
+async function runCallBackHandler(req, res) {
+  runCallBackQueue.add(req.body);
+}
+
+module.exports = { subCallBackHandler, runCallBackHandler };
