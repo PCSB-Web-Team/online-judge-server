@@ -60,6 +60,7 @@ const submissionProcess = async (job) => {
         updatedSubmission.questionId
       );
     }
+    res.send("Done")
   } catch (err) {
     console.log(err.message);
   }
