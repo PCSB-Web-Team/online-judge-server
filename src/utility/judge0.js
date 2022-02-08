@@ -12,8 +12,7 @@ async function submissionBatch(data) {
       url: `${process.env.judge0}/submissions/batch`,
       params: { base64_encoded: "true" },
       headers: {
-        "content-type": "application/json",
-        "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+        "X-Auth-Token": "CSI",
       },
       data: {
         submissions: data,
