@@ -52,7 +52,7 @@ const submissionProcess = async (job) => {
         { $inc: { score: 10, passedCases: 1 } },
         { upsert: true , new: true}
       );
-        console.log(updatedSubmission)
+        
       const participantScore = await UpdateScore(
         updatedSubmission.contestId,
         updatedSubmission.userId,
@@ -60,7 +60,7 @@ const submissionProcess = async (job) => {
         updatedSubmission.questionId
       );
     }
-    res.send("Done")
+    
   } catch (err) {
     console.log(err.message);
   }

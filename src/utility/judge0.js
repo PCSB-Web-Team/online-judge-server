@@ -6,7 +6,7 @@ const Run = require("../models/run.model");
 async function submissionBatch(data) {
   try {
     //  Call Judge0 and get n tokens
-    console.log("here")
+    console.log(`${process.env.judge0}/submissions/batch`)
     let postResult = await axios({
       method: "POST",
       url: `${process.env.judge0}/submissions/batch`,
@@ -19,7 +19,6 @@ async function submissionBatch(data) {
         submissions: data,
       },
     });
-    console.log("now")
     // Array of tokens recieved by Judge0
     const tokens = postResult.data.map(({ token }) => token);
 
