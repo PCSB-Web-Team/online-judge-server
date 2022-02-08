@@ -12,7 +12,7 @@ const contestSchema = new mongoose.Schema({
     required: true,
   },
   endsOn: {
-    type: String,
+    type: Date,
     required: true,
   },
 });

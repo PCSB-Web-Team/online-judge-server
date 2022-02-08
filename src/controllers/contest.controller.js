@@ -29,6 +29,7 @@ async function getAllContest(req, res) {
     } else {
       res.send(allContests);
     }
+    res.send(result)
   } catch (err) {
     res.status(404).send(err.message);
   }

@@ -6,20 +6,21 @@ const Run = require("../models/run.model");
 async function submissionBatch(data) {
   try {
     //  Call Judge0 and get n tokens
+    console.log("here")
     let postResult = await axios({
       method: "POST",
       url: `${process.env.judge0}/submissions/batch`,
       params: { base64_encoded: "true" },
       headers: {
         "content-type": "application/json",
-        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-        "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+        "X-Auth-User": "CSI",
+        "X-Auth-Token": "CSI"
       },
       data: {
         submissions: data,
       },
     });
-
+    console.log("now")
     // Array of tokens recieved by Judge0
     const tokens = postResult.data.map(({ token }) => token);
 
