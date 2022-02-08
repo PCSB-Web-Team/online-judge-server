@@ -6,7 +6,7 @@ const Run = require("../models/run.model");
 async function submissionBatch(data) {
   try {
     //  Call Judge0 and get n tokens
-    console.log(`${process.env.judge0}/submissions/batch`)
+    
     let postResult = await axios({
       method: "POST",
       url: `${process.env.judge0}/submissions/batch`,
