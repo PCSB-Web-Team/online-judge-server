@@ -33,7 +33,7 @@ const submissionSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    timestamp: { type: Date, default: Date.now},
+    timestamp: { type: Date, default: Date.now },
   },
   { _id: true, strict: false }
 );
@@ -42,15 +42,18 @@ submissionSchema.set("toObject", { virtuals: true });
 submissionSchema.set("toJSON", { virtuals: true });
 
 submissionSchema.virtual("status").get(function () {
-
-  if (this.passedCases == 0) {
-    return "Processing / Rejected";
-  } else if (this.passedCases > 0 && this.passedCases < this.maxCases) {
-    return "Partially Accepted";
+  
+  if (this.checkedCases == maxCases) {
+    if (this.passedCases == 0) {
+      return "Rejected";
+    } else if (this.passedCases > 0 && this.passedCases < this.maxCases) {
+      return "Partially Accepted";
+    } else {
+      return "Accepted";
+    }
   } else {
-    return "Accepted"
+    return "Processing";
   }
-
 });
 
 const SubmissionModel = mongoose.model("submission", submissionSchema);
