@@ -15,7 +15,7 @@ const submissionProcess = async (job) => {
   const callbackBody = job.data;
   try {
     console.log("Call back hit", callbackBody.status);
-    
+
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(
       callbackBody.stdout || "",
@@ -45,7 +45,7 @@ const submissionProcess = async (job) => {
     if (callbackBody.status.id == 3) {
       const updatedSubmission = await Submission.findOneAndUpdate(
         { _id: executionBody.submissionId },
-        { $inc: { score: 10, passedCases: 1 } },
+        { $inc: { score: 10, passedCases: 1, checkedCases: 1 } },
         { upsert: true, new: true }
       );
       console.log("Submission score added");
@@ -54,6 +54,14 @@ const submissionProcess = async (job) => {
         updatedSubmission.userId,
         updatedSubmission.score,
         updatedSubmission.questionId
+      );
+
+        // Else just increase checked cases count
+    } else {
+      const updatedSubmission = await Submission.findOneAndUpdate(
+        { _id: executionBody.submissionId },
+        { $inc: { checkedCases: 1 } },
+        { upsert: true, new: true }
       );
     }
   } catch (err) {
