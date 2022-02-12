@@ -42,8 +42,8 @@ submissionSchema.set("toObject", { virtuals: true });
 submissionSchema.set("toJSON", { virtuals: true });
 
 submissionSchema.virtual("status").get(function () {
-  
-  if (this.checkedCases == maxCases) {
+
+  if (this.checkedCases == this.maxCases) {
     if (this.passedCases == 0) {
       return "Rejected";
     } else if (this.passedCases > 0 && this.passedCases < this.maxCases) {
