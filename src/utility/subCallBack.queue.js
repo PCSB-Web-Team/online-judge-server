@@ -15,14 +15,8 @@ const submissionProcess = async (job) => {
   const callbackBody = job.data;
   try {
     console.log("Call back hit", callbackBody.status);
-
-    const foundExecution = await Execution.findOne({
-      token: callbackBody.token,
-    }).lean();
-
-    // If status of submission is Accepted ( 3 ) then update score
-    if (callbackBody.status.id != foundExecution.status.id ) {
-      // Decoding all the Base64 encoded fields
+    
+    // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(
       callbackBody.stdout || "",
       "base64"
@@ -40,19 +34,21 @@ const submissionProcess = async (job) => {
       "base64"
     ).toString("ascii");
 
-      // Update the Execution Model with body
-      const executionBody = await Execution.findOneAndUpdate(
-        { token: callbackBody.token },
-        callbackBody,
-        { new: true }
-      ).lean();
+    // Update the Execution Model with body
+    const executionBody = await Execution.findOneAndUpdate(
+      { token: callbackBody.token },
+      callbackBody,
+      { new: true }
+    ).lean();
 
+    // If status of submission is Accepted ( 3 ) then update score
+    if (callbackBody.status.id == 3) {
       const updatedSubmission = await Submission.findOneAndUpdate(
         { _id: executionBody.submissionId },
         { $inc: { score: 10, passedCases: 1 } },
-        { upsert: true , new: true}
+        { upsert: true, new: true }
       );
-      console.log("Submission score added")
+      console.log("Submission score added");
       const participantScore = await UpdateScore(
         updatedSubmission.contestId,
         updatedSubmission.userId,
@@ -60,7 +56,6 @@ const submissionProcess = async (job) => {
         updatedSubmission.questionId
       );
     }
-    
   } catch (err) {
     console.log(err.message);
   }
