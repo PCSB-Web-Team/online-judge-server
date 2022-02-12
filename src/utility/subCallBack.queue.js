@@ -20,25 +20,31 @@ const submissionProcess = async (job) => {
       token: callbackBody.token,
     }).lean();
 
+    const checkedSubmission = await Submission.findOneAndUpdate(
+      { _id: foundExecution.submissionId },
+      { $inc: { checkedCases: 1 } },
+      { upsert: true, new: true }
+    );
+
     // If status of submission is Accepted ( 3 ) then update score
-    if (callbackBody.status.id != foundExecution.status.id ) {
+    if (callbackBody.status.id != foundExecution.status.id) {
       // Decoding all the Base64 encoded fields
-    callbackBody.stdout = Buffer.from(
-      callbackBody.stdout || "",
-      "base64"
-    ).toString("ascii");
-    callbackBody.message = Buffer.from(
-      callbackBody.message || "",
-      "base64"
-    ).toString("ascii");
-    callbackBody.stderr = Buffer.from(
-      callbackBody.stderr || "",
-      "base64"
-    ).toString("ascii");
-    callbackBody.compile_output = Buffer.from(
-      callbackBody.compile_output || "",
-      "base64"
-    ).toString("ascii");
+      callbackBody.stdout = Buffer.from(
+        callbackBody.stdout || "",
+        "base64"
+      ).toString("ascii");
+      callbackBody.message = Buffer.from(
+        callbackBody.message || "",
+        "base64"
+      ).toString("ascii");
+      callbackBody.stderr = Buffer.from(
+        callbackBody.stderr || "",
+        "base64"
+      ).toString("ascii");
+      callbackBody.compile_output = Buffer.from(
+        callbackBody.compile_output || "",
+        "base64"
+      ).toString("ascii");
 
       // Update the Execution Model with body
       const executionBody = await Execution.findOneAndUpdate(
@@ -50,9 +56,9 @@ const submissionProcess = async (job) => {
       const updatedSubmission = await Submission.findOneAndUpdate(
         { _id: executionBody.submissionId },
         { $inc: { score: 10, passedCases: 1 } },
-        { upsert: true , new: true}
+        { upsert: true, new: true }
       );
-      console.log("Submission score added")
+      console.log("Submission score added");
       const participantScore = await UpdateScore(
         updatedSubmission.contestId,
         updatedSubmission.userId,
@@ -60,7 +66,6 @@ const submissionProcess = async (job) => {
         updatedSubmission.questionId
       );
     }
-    
   } catch (err) {
     console.log(err.message);
   }
