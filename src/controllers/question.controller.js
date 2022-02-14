@@ -94,9 +94,23 @@ async function specificQuestion(req, res) {
   }
 }
 
+async function deleteQuestion(req, res) {
+  try {
+    
+    await Question.findByIdAndRemove(req.params.questionid, (err, result) => { 
+      if(err) res.send(err); 
+      else res.send(result) 
+     })
+     
+  } catch (err) {
+    res.status(404).send(err.message);
+  }
+}
+
 module.exports = {
   newQuestion,
   getAllQuestions,
   contestQuestions,
   specificQuestion,
+  deleteQuestion,
 };
