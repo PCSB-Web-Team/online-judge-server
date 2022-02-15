@@ -3,10 +3,13 @@ const {
   AddParticipant,
   GetContestParticipants,
   GetAllParticipants,
+  checkParticipant,
 } = require("../controllers/participant.controller");
 
+
+ParticipantRouter.get("/ranking/:contestId", GetContestParticipants);
+ParticipantRouter.get("/:userId/:contestId", checkParticipant);
 ParticipantRouter.post("/", AddParticipant);
 ParticipantRouter.get("/", GetAllParticipants);
-ParticipantRouter.get("/ranking/:contestId", GetContestParticipants);
 
 module.exports = ParticipantRouter;

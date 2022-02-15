@@ -19,7 +19,11 @@ async function AddParticipant(req, res) {
       return res.status(401).send("Already participated in this contest");
 
     // creating the new participant
-    const newParticipation = await Participant.create({ userId, name: user.name, contestId });
+    const newParticipation = await Participant.create({
+      userId,
+      name: user.name,
+      contestId,
+    });
     res.send(newParticipation);
   } catch (err) {
     res.status(401).send(err.message);
@@ -83,9 +87,26 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
   }
 };
 
+async function checkParticipant(req, res) {
+  const { contestId, userId } = req.params;
+  try {
+    User.find({ userId: userId, contestId: contestId }, function (err, user) {
+      if (err) {
+        return res.send(false);
+      }
+      
+      res.send(true);
+      
+    });
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+}
+
 module.exports = {
   AddParticipant,
   GetContestParticipants,
   GetAllParticipants,
   UpdateScore,
+  checkParticipant,
 };
