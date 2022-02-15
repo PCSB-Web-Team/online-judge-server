@@ -92,9 +92,9 @@ async function checkParticipant(req, res) {
   try {
     Participant.find({ userId: userId, contestId: contestId }, function (err, user) {
       if (err) {
-        return res.send(false);
+        return res.send(err);
       }
-      
+      console.log(user)
       res.send(true);
       
     });
