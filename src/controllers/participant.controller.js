@@ -97,7 +97,7 @@ async function checkParticipant(req, res) {
       if(!user){
         return res.send(false);
       }
-      res.send(fasle);
+      res.send(true);
       
     });
   } catch (err) {
