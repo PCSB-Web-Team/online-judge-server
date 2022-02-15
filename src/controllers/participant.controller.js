@@ -91,9 +91,7 @@ async function checkParticipant(req, res) {
   const { contestId, userId } = req.params;
   try {
     await Participant.find({ userId: userId, contestId: contestId }, function (err, user) {
-      if (err) {
-        return res.send(err);
-      }
+      
       if(!user){
         return res.send(false);
       }
