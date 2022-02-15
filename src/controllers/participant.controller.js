@@ -90,14 +90,16 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
 async function checkParticipant(req, res) {
   const { contestId, userId } = req.params;
   try {
-    await Participant.findOne({ userId: userId, contestId: contestId }, function (err, user) {
-      
-      if(!user){
-        return res.send(false);
-      }
-      res.send(true);
-      
+    const user = await Participant.findOne({
+      userId: userId,
+      contestId: contestId,
     });
+
+    if (!user) {
+      return res.send(false);
+    }
+
+    res.send(true);
   } catch (err) {
     res.status(401).send(err.message);
   }
