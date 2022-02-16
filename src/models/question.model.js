@@ -34,7 +34,7 @@ const questionSchema = new mongoose.Schema(
     },
     explanations: [
       {
-        testcase: [{type: String}],
+        testCase: [{type: String}],
         _id: false,
       },
     ],
