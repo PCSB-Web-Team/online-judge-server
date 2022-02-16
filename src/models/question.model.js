@@ -34,7 +34,7 @@ const questionSchema = new mongoose.Schema(
     },
     explanations: [
       {
-        type: mongoose.Schema.Types.Mixed,
+        testcase: {type: mongoose.Schema.Types.Mixed},
         _id: false,
       },
     ],
