@@ -24,30 +24,28 @@ const questionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    constraints: {
+    constraints: [{
       type: String,
       required: true,
-    },
+    }],
     outputFormat: {
       type: String,
       required: true,
     },
     explanations: [
       {
-        testcaseExplain: {
-          type: String,
-        },
+        type: Schema.Types.Mixed,
         _id: false,
       },
     ],
     samples: [
       {
-        sampleInput: {
+        sampleInput: [{
           type: String,
-        },
-        sampleOutput: {
+        }],
+        sampleOutput: [{
           type: String,
-        },
+        }],
         _id: false,
       },
     ],
