@@ -23,7 +23,7 @@ contestSchema.set("toJSON", { virtuals: true });
 contestSchema.virtual("status").get(function () {
   let status = {};
 
-  var now = moment(new Date());
+  var now = moment(new Date().toLocaleString(undefined, {timeZone: 'Asia/Kolkata'}));
   var start = moment(this.startsOn);
   var end = moment(this.endsOn);
 
