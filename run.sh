@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 
 # Start Judge0
-docker-compose -f docker-compose.judge0.yml up -d db redis
+sudo docker-compose -f docker-compose.judge0.yml up -d db redis
 echo 'Waiting for 10 Seconds'
 sleep 10s
-docker-compose -f docker-compose.judge0.yml up -d
+sudo docker-compose -f docker-compose.judge0.yml up -d
 echo 'Waiting for 5 Seconds'
 sleep 5s
 
