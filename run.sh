@@ -14,3 +14,5 @@ cd ../online-judge-server/
 echo 'Starting Node Server'
 sudo docker-compose up -d
 echo 'Judge0 & Server up!!'
+
+#Execution Command - sudo bash run.sh

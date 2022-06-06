@@ -8,3 +8,5 @@ sudo docker-compose down
 cd ../online-judge-server/
 sudo docker-compose down
 echo 'Judge0 & Server Down'
+
+#Execution Command - sudo bash stop.sh
