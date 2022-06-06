@@ -4,7 +4,10 @@ const cookieParser = require("cookie-parser");
 const connect = require("../src/db/connect");
 const Router = require("./routers");
 const cors = require("cors");
+const judge0Connect = require("./utility/judge0").pingJudge0;
 const { events } = require("./models/contest.model");
+
+judge0Connect();
 
 const app = express();
 

@@ -6,7 +6,7 @@ const Run = require("../models/run.model");
 async function submissionBatch(data) {
   try {
     //  Call Judge0 and get n tokens
-    
+
     let postResult = await axios({
       method: "POST",
       url: `${process.env.judge0}/submissions/batch`,
@@ -33,7 +33,7 @@ async function submissionBatch(data) {
 
     // Next : The status recieved by Judge0 on callback will change the submission model
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
   }
 }
 
@@ -70,8 +70,21 @@ async function runBatch(data) {
 
     // Next : The status recieved by Judge0 on callback will change the run model
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
   }
 }
 
-module.exports = { submissionBatch, runBatch };
+async function pingJudge0() {
+  if (process.env.judge0)
+    await axios
+      .get(`${process.env.judge0}/about`)
+      .then((res) => {
+        console.log("Judge0 connected, Got respons: " + JSON.stringify(res.data));
+      })
+      .catch((err) => {
+        console.log("Unable to connect to Judge0, Error: " + err);
+      });
+  else console.log("Unable to find judge0 Link");
+}
+
+module.exports = { submissionBatch, runBatch, pingJudge0 };
