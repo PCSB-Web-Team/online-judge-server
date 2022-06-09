@@ -1,4 +1,3 @@
-
 version: '3'
 services:
   redis:
@@ -11,6 +10,8 @@ services:
       - webnet
   web:
     build: .
+    ports:
+      - "3000:3000"
     volumes:
       - .:/oj
       - /oj/node_modules
@@ -20,17 +21,8 @@ services:
       - .env
     networks:
       - webnet
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./conf.d:/etc/nginx/conf.d
-    depends_on:
-      - web
-    ports:
-      - 3000:3000
 networks:
   webnet:
-
 
 
 # version: '3'
@@ -45,8 +37,6 @@ networks:
 #       - webnet
 #   web:
 #     build: .
-#     ports:
-#       - "3000:3000"
 #     volumes:
 #       - .:/oj
 #       - /oj/node_modules
@@ -56,5 +46,15 @@ networks:
 #       - .env
 #     networks:
 #       - webnet
+#   nginx:
+#     image: nginx:latest
+#     volumes:
+#       - ./conf.d:/etc/nginx/conf.d
+#     depends_on:
+#       - web
+#     ports:
+#       - 3000:3000
 # networks:
 #   webnet:
+
+
