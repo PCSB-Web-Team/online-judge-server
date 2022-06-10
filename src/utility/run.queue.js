@@ -19,7 +19,7 @@ function startTimeOut() {
       runBatch(list);
       list = [];
     }
-  }, 10000);
+  }, 3000);
 }
 
 // Redis Consumer : Executing after Producer adds data to queue
