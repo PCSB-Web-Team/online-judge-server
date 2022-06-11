@@ -27,6 +27,7 @@ async function submissionBatch(data) {
     for (let i = 0; i < tokens.length; i++) {
       await Execution.create({
         submissionId: data[i].submissionId,
+        expected_output: data[i].expected_output,
         token: tokens[i],
       });
     }

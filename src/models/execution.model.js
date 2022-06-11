@@ -12,6 +12,10 @@ const executionSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    expected_output: {
+      type: String,
+      default: null,
+    },
     time: {
       type: mongoose.Types.Decimal128,
       default: 0,
