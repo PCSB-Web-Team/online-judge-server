@@ -21,7 +21,7 @@ async function submissionBatch(data) {
     // Array of tokens recieved by Judge0
     const tokens = postResult.data.map(({ token }) => token);
 
-    console.log("Submission Batch Processed");
+    console.log(`Submission Batch Processed, BatchSize - ${data.length}`);
 
     // Create n executions in DB with (n tokens)*times
     for (let i = 0; i < tokens.length; i++) {
