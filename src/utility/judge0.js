@@ -57,7 +57,7 @@ async function runBatch(data) {
     // Array of tokens recieved by Judge0
     const tokens = postResult.data.map(({ token }) => token);
 
-    console.log("Run Batch Processed");
+    console.log(`Run Batch Processed, BatchSize : ${data.length}`);
 
     // Create n runs in DB with (n tokens)*times
     for (let i = 0; i < tokens.length; i++) {
