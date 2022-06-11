@@ -14,7 +14,7 @@ const subCallBackQueue = new Bull("subCallback", {
 const submissionProcess = async (job) => {
   const callbackBody = job.data;
   try {
-    console.log("Call back hit", {Status: callbackBody.status.description} );
+    console.log("Call back hit", {SubmissionID: callbackBody, Status: callbackBody.status.description} );
 
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(
