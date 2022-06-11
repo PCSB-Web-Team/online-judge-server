@@ -17,7 +17,7 @@ async function login(req, res) {
     if (await bcrypt.compare(password, user.password)) {
       const token = await createToken(user);
       user.token = token;
-      res.json(user);
+      return res.json(user);
     }
 
     return res.status(404).send("Invalid Password");
