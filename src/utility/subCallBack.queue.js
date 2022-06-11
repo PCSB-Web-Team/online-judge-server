@@ -14,7 +14,6 @@ const subCallBackQueue = new Bull("subCallback", {
 const submissionProcess = async (job) => {
   const callbackBody = job.data;
   try {
-    console.log("Call back hit", {SubmissionID: callbackBody, Status: callbackBody.status.description} );
 
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(
@@ -40,6 +39,8 @@ const submissionProcess = async (job) => {
       callbackBody,
       { new: true }
     ).lean();
+
+    console.log("Call back hit", {SubmissionID: executionBody.submissionId, Status: callbackBody.status.description} );
 
     // If status of submission is Accepted ( 3 ) then update score
     if (callbackBody.status.id == 3) {
