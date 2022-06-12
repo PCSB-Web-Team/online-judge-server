@@ -78,27 +78,32 @@ async function getSubmission(req, res) {
 
     if (submission) {
       
+      //If all checked only then send executions(Test Cases Details)
       if(submission.checkedCases==submission.maxCases){
         const executions = await Execution.find({ submissionId: submission._id });
-        console.log("here")
+        
+        //If all cases passed then send last 3 or less(if 3 not present) number of executions 
         if(submission.passedCases==submission.maxCases){
-          console.log("here3")
+          
           const lastExecutions = (executions.length>=3) ? executions.slice(-3): executions; 
+          
           res.send({ submission: submission, executions: lastExecutions }); 
+        
+        //If partial passed or failed then send first wrong found execution
         }else{
-          console.log("here4")
+          
           const lastExecution = executions.find(element => {
             return element.status.id>3;
           });
+          
           res.send({ submission: submission, executions: [lastExecution] });
         }
 
+      //If all cases not checked then send send only submission details and no test cases details
       }else{
-        console.log("here2")
         res.send({ submission: submission, executions: [] });
       }
-
-      // res.send({ submission: submission, executions: executions });
+    
     } else {
       res.status(404).send("No submissions exists with such token");
     }
