@@ -25,6 +25,12 @@ async function submissionBatch(data) {
 
     // Create n executions in DB with (n tokens)*times
     for (let i = 0; i < tokens.length; i++) {
+
+      data[i].expected_output = Buffer.from(
+        data[i].expected_output || "",
+        "base64"
+      ).toString("ascii");
+
       await Execution.create({
         submissionId: data[i].submissionId,
         expected_output: data[i].expected_output,
