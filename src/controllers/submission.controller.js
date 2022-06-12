@@ -90,7 +90,7 @@ async function getSubmission(req, res) {
           const lastExecution = executions.find(element => {
             return element.status.id>3;
           });
-          res.send({ submission: submission, executions: lastExecution });
+          res.send({ submission: submission, executions: [lastExecution] });
         }
 
       }else{
