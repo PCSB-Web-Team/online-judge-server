@@ -77,9 +77,25 @@ async function getSubmission(req, res) {
     const submission = await Submission.findOne({ _id: req.params.submissionId });
 
     if (submission) {
-      const executions = await Execution.find({ submissionId: submission._id });
+      
+      if(submission.checkedCases==submission.maxCases){
+        const executions = await Execution.find({ submissionId: submission._id });
 
-      res.send({ submission: submission, executions: executions });
+        if(submission.passedCases==submission.maxCases){
+          const lastExecutions = (executions.length>=3) ? executions.slice(-3): executions; 
+          res.send({ submission: submission, executions: lastExecutions }); 
+        }else{
+          const lastExecution = arr.find(element => {
+            return element.id>3;
+          });
+          res.send({ submission: submission, executions: lastExecution });
+        }
+
+      }else{
+        res.send({ submission: submission, executions: [] });
+      }
+
+      // res.send({ submission: submission, executions: executions });
     } else {
       res.status(404).send("No submissions exists with such token");
     }
