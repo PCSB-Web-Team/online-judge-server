@@ -85,7 +85,7 @@ async function getSubmission(req, res) {
           const lastExecutions = (executions.length>=3) ? executions.slice(-3): executions; 
           res.send({ submission: submission, executions: lastExecutions }); 
         }else{
-          const lastExecution = arr.find(element => {
+          const lastExecution = executions.find(element => {
             return element.id>3;
           });
           res.send({ submission: submission, executions: lastExecution });
