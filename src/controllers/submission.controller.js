@@ -80,11 +80,13 @@ async function getSubmission(req, res) {
       
       if(submission.checkedCases==submission.maxCases){
         const executions = await Execution.find({ submissionId: submission._id });
-
+        console.log("here")
         if(submission.passedCases==submission.maxCases){
+          console.log("here3")
           const lastExecutions = (executions.length>=3) ? executions.slice(-3): executions; 
           res.send({ submission: submission, executions: lastExecutions }); 
         }else{
+          console.log("here4")
           const lastExecution = executions.find(element => {
             return element.id>3;
           });
@@ -92,6 +94,7 @@ async function getSubmission(req, res) {
         }
 
       }else{
+        console.log("here2")
         res.send({ submission: submission, executions: [] });
       }
 
