@@ -88,7 +88,7 @@ async function getSubmission(req, res) {
         }else{
           console.log("here4")
           const lastExecution = executions.find(element => {
-            return element.id>3;
+            return element.status.id>3;
           });
           res.send({ submission: submission, executions: lastExecution });
         }
