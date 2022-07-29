@@ -3,18 +3,41 @@ const Question = require("../models/question.model");
 // Create a new question
 
 async function newQuestion(req, res) {
-  const { title, description, time, memory, example, contestId, score } = req.body;
+  const {
+    title,
+    difficultyLevel,
+    problemStatement,
+    description,
+    inputFormat,
+    constraints,
+    outputFormat,
+    explanations,
+    samples,
+    time,
+    memory,
+    example,
+    contestId,
+    score,
+  } = req.body;
 
   try {
     const newQuestion = await Question.create({
       title,
+      difficultyLevel,
+      problemStatement,
       description,
+      inputFormat,
+      constraints,
+      outputFormat,
+      explanations,
+      samples,
       time,
       memory,
       example,
       contestId,
-      score
+      score,
     });
+
     res.send(newQuestion);
   } catch (err) {
     res.status(400).send(err.message);
@@ -54,7 +77,6 @@ async function contestQuestions(req, res) {
   }
 }
 
-
 // Get all questions of a contest if exists using ./question/:questionid
 
 async function specificQuestion(req, res) {
@@ -72,4 +94,21 @@ async function specificQuestion(req, res) {
   }
 }
 
-module.exports = { newQuestion, getAllQuestions, contestQuestions, specificQuestion };
+async function deleteQuestion(req, res) {
+  try {
+    
+    await Question.findByIdAndRemove(req.params.questionid);
+    res.status(200).send("Successfully removed")
+
+  } catch (err) {
+    res.status(404).send(err.message);
+  }
+}
+
+module.exports = {
+  newQuestion,
+  getAllQuestions,
+  contestQuestions,
+  specificQuestion,
+  deleteQuestion,
+};

@@ -7,10 +7,48 @@ const questionSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    difficultyLevel: {
+      type: String,
+      required: true,
+    },
+    problemStatement: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     description: {
       type: String,
       required: true,
     },
+    inputFormat: {
+      type: String,
+      required: true,
+    },
+    constraints: [{
+      type: String,
+      required: true,
+    }],
+    outputFormat: {
+      type: String,
+      required: true,
+    },
+    explanations: [
+      {
+        testCase: [{type: String}],
+        _id: false,
+      },
+    ],
+    samples: [
+      {
+        sampleInput: [{
+          type: String,
+        }],
+        sampleOutput: [{
+          type: String,
+        }],
+        _id: false,
+      },
+    ],
     time: {
       type: mongoose.Types.Decimal128,
       required: true,

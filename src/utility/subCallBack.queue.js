@@ -14,7 +14,6 @@ const subCallBackQueue = new Bull("subCallback", {
 const submissionProcess = async (job) => {
   const callbackBody = job.data;
   try {
-    console.log("Call back hit", callbackBody.status);
 
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(
@@ -34,36 +33,36 @@ const submissionProcess = async (job) => {
       "base64"
     ).toString("ascii");
 
-    const foundExecution = await Execution.findOne({
-      token: callbackBody.token,
-    }).lean();
+    // Update the Execution Model with body
+    const executionBody = await Execution.findOneAndUpdate(
+      { token: callbackBody.token },
+      callbackBody,
+      { new: true }
+    ).lean();
+
+    console.log("Call back hit", {SubmissionID: (executionBody.submissionId).toString(), Status: callbackBody.status.description} );
 
     // If status of submission is Accepted ( 3 ) then update score
-    if (callbackBody.status.id === 3 && foundExecution.status.id !== 3) {
-      // Update the Execution Model with body
-      const executionBody = await Execution.findOneAndUpdate(
-        { token: callbackBody.token },
-        callbackBody,
-        { new: true }
-      ).lean();
-
-      console.log("Updated the status", executionBody.status);
-
-      const updatedSubmission = await Submission.updateOne(
+    if (callbackBody.status.id == 3) {
+      const updatedSubmission = await Submission.findOneAndUpdate(
         { _id: executionBody.submissionId },
-        { $inc: { score: 10, passedCases: 1 } },
-        { upsert: true }
+        { $inc: { score: 10, passedCases: 1, checkedCases: 1 } },
+        { upsert: true, new: true }
+      );
+      console.log("Submission score added");
+      const participantScore = await UpdateScore(
+        updatedSubmission.contestId,
+        updatedSubmission.userId,
+        updatedSubmission.score,
+        updatedSubmission.questionId
       );
 
-      const finalSubmission = await Submission.findOne({
-        _id: executionBody.submissionId,
-      });
-
-      const participantScore = await UpdateScore(
-        finalSubmission.contestId,
-        finalSubmission.userId,
-        finalSubmission.score,
-        finalSubmission.questionId
+        // Else just increase checked cases count
+    } else {
+      const updatedSubmission = await Submission.findOneAndUpdate(
+        { _id: executionBody.submissionId },
+        { $inc: { checkedCases: 1 } },
+        { upsert: true, new: true }
       );
     }
   } catch (err) {

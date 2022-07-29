@@ -55,7 +55,6 @@ async function submit(req, res) {
         expected_output: testOutput[index],
         callback_url: subCallBackURL,
         number_of_runs: 1,
-        max_number_of_runs: 1,
         submissionId: newSubmission._id,
       }));
 
@@ -78,9 +77,33 @@ async function getSubmission(req, res) {
     const submission = await Submission.findOne({ _id: req.params.submissionId });
 
     if (submission) {
-      const executions = await Execution.find({ submissionId: submission._id });
+      
+      //If all checked only then send executions(Test Cases Details)
+      if(submission.checkedCases==submission.maxCases){
+        const executions = await Execution.find({ submissionId: submission._id });
+        
+        //If all cases passed then send last 3 or less(if 3 not present) number of executions 
+        if(submission.passedCases==submission.maxCases){
+          
+          const lastExecutions = (executions.length>=3) ? executions.slice(-3): executions; 
+          
+          res.send({ submission: submission, executions: lastExecutions }); 
+        
+        //If partial passed or failed then send first wrong found execution
+        }else{
+          
+          const lastExecution = executions.find(element => {
+            return element.status.id>3;
+          });
+          
+          res.send({ submission: submission, executions: [lastExecution] });
+        }
 
-      res.send({ submission: submission, executions: executions });
+      //If all cases not checked then send send only submission details and no test cases details
+      }else{
+        res.send({ submission: submission, executions: [] });
+      }
+    
     } else {
       res.status(404).send("No submissions exists with such token");
     }
@@ -105,7 +128,7 @@ async function getAllSubmissions(req, res) {
 async function getUserSubmissions(req, res) {
   try {
     const { userId } = req.params;
-    const submissions = await Submission.find({ userId: userId });
+    const submissions = await Submission.find({ userId: userId }).sort({ timestamp : -1 });
     res.send(submissions);
   } catch (err) {
     res.status(401).send(err.message);

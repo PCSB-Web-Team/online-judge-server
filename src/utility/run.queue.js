@@ -19,7 +19,7 @@ function startTimeOut() {
       runBatch(list);
       list = [];
     }
-  }, 10000);
+  }, 3000);
 }
 
 // Redis Consumer : Executing after Producer adds data to queue
@@ -32,7 +32,7 @@ const runProcess = async (job) => {
   list.push(job.data);
 
   // If list length is n then send for Batch Run (Judge0)
-  if (list.length == 5) {
+  if (list.length == 20) {
     
     runBatch(list);
     list = [];

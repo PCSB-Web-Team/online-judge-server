@@ -22,7 +22,8 @@
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "mongoose": "^6.0.14",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "redis": "^4.0.3"
   },
   "engines": {
     "node": "v14.18.2"

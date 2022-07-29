@@ -87,23 +87,21 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
   }
 };
 
-async function CheckParticipantIsRegistered(req, res) {
-  const { userId, contestId } = req.params;
-
+async function checkParticipant(req, res) {
+  const { contestId, userId } = req.params;
   try {
-    if (!userId || !contestId)
-      return res.status(400).send("Send Both userId and ContestId");
-
-    const participant = await Participant.findOne({
+    const user = await Participant.findOne({
       userId: userId,
       contestId: contestId,
-    }).lean();
+    });
 
-    if (participant) return res.send(true);
+    if (!user) {
+      return res.send(false);
+    }
 
-    res.send(false);
+    res.send(true);
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(401).send(err.message);
   }
 }
 
@@ -112,5 +110,5 @@ module.exports = {
   GetContestParticipants,
   GetAllParticipants,
   UpdateScore,
-  CheckParticipantIsRegistered,
+  checkParticipant,
 };

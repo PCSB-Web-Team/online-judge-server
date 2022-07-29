@@ -11,6 +11,7 @@ const { runCallBackQueue } = require("../utility/runCallBack.queue");
 
 async function subCallBackHandler(req, res) {
   subCallBackQueue.add(req.body);
+  res.status(200).send("Success");
 }
 
 // Receive data from Judge0 and update it in Run
@@ -18,6 +19,7 @@ async function subCallBackHandler(req, res) {
 
 async function runCallBackHandler(req, res) {
   runCallBackQueue.add(req.body);
+  res.status(200).send("Success");
 }
 
 module.exports = { subCallBackHandler, runCallBackHandler };

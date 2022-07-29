@@ -25,10 +25,11 @@ async function getAllContest(req, res) {
   try {
     const allContests = await Contest.find({});
     if (allContests.length === 0) {
-      res.status(404).send("No active contest at the moment");
+      return res.status(404).send("No active contest at the moment");
     } else {
-      res.send(allContests);
+      return res.send(allContests);
     }
+    res.send(result)
   } catch (err) {
     res.status(404).send(err.message);
   }

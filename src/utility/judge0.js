@@ -6,36 +6,41 @@ const Run = require("../models/run.model");
 async function submissionBatch(data) {
   try {
     //  Call Judge0 and get n tokens
+
     let postResult = await axios({
       method: "POST",
       url: `${process.env.judge0}/submissions/batch`,
       params: { base64_encoded: "true" },
       headers: {
         "content-type": "application/json",
-        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
-        "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
       },
       data: {
         submissions: data,
       },
     });
-
     // Array of tokens recieved by Judge0
     const tokens = postResult.data.map(({ token }) => token);
 
-    console.log("Submission Batch Processed");
+    console.log(`Submission Batch Processed, BatchSize - ${data.length}`);
 
     // Create n executions in DB with (n tokens)*times
     for (let i = 0; i < tokens.length; i++) {
+
+      data[i].expected_output = Buffer.from(
+        data[i].expected_output || "",
+        "base64"
+      ).toString("ascii");
+
       await Execution.create({
         submissionId: data[i].submissionId,
+        expected_output: data[i].expected_output,
         token: tokens[i],
       });
     }
 
     // Next : The status recieved by Judge0 on callback will change the submission model
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
   }
 }
 
@@ -49,7 +54,6 @@ async function runBatch(data) {
       params: { base64_encoded: "true" },
       headers: {
         "content-type": "application/json",
-        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
         "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
       },
       data: {
@@ -60,7 +64,7 @@ async function runBatch(data) {
     // Array of tokens recieved by Judge0
     const tokens = postResult.data.map(({ token }) => token);
 
-    console.log("Run Batch Processed");
+    console.log(`Run Batch Processed, BatchSize : ${data.length}`);
 
     // Create n runs in DB with (n tokens)*times
     for (let i = 0; i < tokens.length; i++) {
@@ -73,8 +77,21 @@ async function runBatch(data) {
 
     // Next : The status recieved by Judge0 on callback will change the run model
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
   }
 }
 
-module.exports = { submissionBatch, runBatch };
+async function pingJudge0() {
+  if (process.env.judge0)
+    await axios
+      .get(`${process.env.judge0}/about`)
+      .then((res) => {
+        console.log("Judge0 connected, Got respons: " + JSON.stringify(res.data));
+      })
+      .catch((err) => {
+        console.log("Unable to connect to Judge0, Error: " + err);
+      });
+  else console.log("Unable to find judge0 Link");
+}
+
+module.exports = { submissionBatch, runBatch, pingJudge0 };
