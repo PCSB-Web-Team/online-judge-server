@@ -1,5 +1,4 @@
 # Online Judge API
-[![CodeFactor](https://www.codefactor.io/repository/github/pcsb-web-team/online-judge-server/badge)](https://www.codefactor.io/repository/github/pcsb-web-team/online-judge-server)
 
 Online Judge of PCSB CSI Student Branch
 
