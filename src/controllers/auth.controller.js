@@ -91,11 +91,9 @@ async function generateUser(req, res) {
 
     //Create a new user if already does not exists
     if (!user) {
-      
+
       // Generate random password
-      var buf = new Uint8Array(6);
-      window.crypto.getRandomValues(buf);
-      const password = btoa(String.fromCharCode.apply(null, buf));
+      const password = Math.random().toString(36).slice(2, 10)
 
       // Encrypting password
       const encyptedPassword = await bcrypt.hash(password, 10);
