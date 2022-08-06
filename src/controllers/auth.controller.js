@@ -110,6 +110,8 @@ async function generateUser(req, res) {
       });
     }
 
+
+
     //Find contest ID
     const contest = await Contest.findOne({ title: eventName });
     if (!contest) res.status(404).send("No contest exist with such name");
@@ -121,7 +123,7 @@ async function generateUser(req, res) {
 
     if (isCreated)
       return res.status(200).send("User created and registered successfully");
-    else return res.status(400).send("User has not been registered");
+    else return res.status(400).send("User has not been registered or participant already exist");
   } catch (err) {
     res.status(400).send(err.message);
   }

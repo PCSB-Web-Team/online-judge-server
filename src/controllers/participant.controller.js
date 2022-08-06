@@ -53,7 +53,7 @@ async function AddParticipantFunct(userId, contestId) {
     const registration = await Participant.findOne({ userId, contestId });
     if (registration) {
       console.log("Already participated in this contest");
-      return true;
+      return false;
     }
 
     // creating the new participant
