@@ -108,6 +108,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
 
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
+    if (!participant.individualTime) participant.individualTime = {};
 
     console.log(
       "Score received: " +
