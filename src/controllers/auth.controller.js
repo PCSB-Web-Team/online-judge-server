@@ -107,6 +107,7 @@ async function generateUser(req, res) {
       }, { new: true });
     }
 
+    console.log({password: password, encyptedPassword: encyptedPassword, user});
     //Find contest ID
     const contest = await Contest.findOne({ title: eventName });
     if (!contest) res.status(404).send("No contest exist with such name");
