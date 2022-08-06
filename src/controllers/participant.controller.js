@@ -174,6 +174,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
           individualScore: participant.individualScore,
           score: sum,
           individualTime: participant.individualTime,
+          averageTime: participant.averageTime,
         },
       }
     );
