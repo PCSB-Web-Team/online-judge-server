@@ -119,8 +119,8 @@ async function generateUser(req, res) {
 
     //Register the user to the event
     // const userParticipateURL = `${process.env.callBack}/participant/`;
-    AddParticipantFunct(contestId, user._id);
-    
+    AddParticipantFunct(user._id, contestId);
+
     return res.status(200).send("User created and registered successfully");
 
   } catch (err) {
