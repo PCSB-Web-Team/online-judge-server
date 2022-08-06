@@ -1,6 +1,7 @@
 const Contest = require("../models/contest.model");
 const Participant = require("../models/participants.model");
 const User = require("../models/user");
+const moment = require("moment")
 
 //Route to register the participant directly from the platform (using route)
 async function AddParticipant(req, res) {
@@ -102,10 +103,23 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
 
+    // updating the score only if the score is more than current score
     participant.individualScore[questionId] = Math.max(
       score,
       participant.individualScore[questionId] || 0
     );
+
+    // checking if we need to increate the average time
+    // we dont need to update the average time of the score 
+    if(score==participant.individualScore[questionId] && !participant.individualTime[questionId]){
+      console.log("Updating the time for questionId: "+questionId+", for user: "+userId);
+      participant.individualTime[questionId] = new Date();
+
+      const averageTime = getAverageTime(Object.keys().map(key => participant.individualTime[key]));
+      console.log("Updating the average time from: "+participant.averageTime+", to "+averageTime);
+      participant.averageTime = averageTime;
+    }
+
 
     // calculating the total score
     let sum = 0;
@@ -115,6 +129,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
 
     // saving the updated doc to mongo
     participant.individualScore = { ...participant.individualScore };
+
     await Participant.updateOne(
       { _id: participant._id },
       { $set: { individualScore: participant.individualScore, score: sum } }
@@ -141,6 +156,19 @@ async function checkParticipant(req, res) {
   } catch (err) {
     res.status(401).send(err.message);
   }
+}
+
+let dateArray = [new Date('Sat Oct 15 2016 07:09:00 GMT+0800 (MYT)'), new Date('Mon Oct 17 2016 06:48:00 GMT+0800 (MYT)'), new Date('Tue Oct 18 2016 08:38:00 GMT+0800 (MYT)')];
+
+function getAverageTime(array) {
+  let sum = 0;
+  array.map(function(d) {
+    let now = new Date();
+    let startDay = d.setFullYear(now.getFullYear(), now.getMonth(), now.getDate());
+    sum += startDay;
+  });
+
+  return new Date(sum / array.length);
 }
 
 module.exports = {

@@ -4,7 +4,7 @@ const { runBatch } = require("./judge0");
 const runQueue = new Bull("run", {
   redis: {
     host: process.env.redisHost || "127.0.0.1",
-    port: 6379
+    port: process.env.redisPort,
   },
 });
 
@@ -25,15 +25,14 @@ function startTimeOut() {
 // Redis Consumer : Executing after Producer adds data to queue
 const runProcess = async (job) => {
   // first clear the timeout that is running
-  
+
   clearTimeout(timeOut);
-  
+
   // Push data to array list
   list.push(job.data);
 
   // If list length is n then send for Batch Run (Judge0)
   if (list.length == 20) {
-    
     runBatch(list);
     list = [];
   } else {

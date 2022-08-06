@@ -72,6 +72,8 @@ async function register(req, res) {
 async function profile(req, res) {
   try {
     // Find user without sending password and version key (__v)
+    const userId = req.user.id;
+    console.log("[Auth] Get by user-id: " + req.user.id);
     const user = await User.findById(req.user.id).select("-password -__v");
     if (user) {
       res.send(user);
@@ -79,7 +81,7 @@ async function profile(req, res) {
       res.status(404).send("No user exists with such id");
     }
   } catch (err) {
-    res.code(400).send(err.message);
+    res.status(400).send(err.message);
   }
 }
 

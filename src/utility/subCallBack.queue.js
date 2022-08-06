@@ -6,7 +6,7 @@ const { UpdateScore } = require("../controllers/participant.controller");
 const subCallBackQueue = new Bull("subCallback", {
   redis: {
     host: process.env.redisHost || "127.0.0.1",
-    port: 6379,
+    port: process.env.redisPort,
   },
 });
 

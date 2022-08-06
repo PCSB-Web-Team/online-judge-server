@@ -6,6 +6,18 @@ const Router = require("./routers");
 const cors = require("cors");
 const judge0Connect = require("./utility/judge0").pingJudge0;
 const { events } = require("./models/contest.model");
+const axios = require("axios");
+
+console.log(
+  "Redis Port: " + process.env.redisPort + ", Host: " + process.env.redisHost
+);
+
+axios
+  .get("http://localhost:" + process.env.redisPort)
+  .then((res) => {
+    console.log("Respomse from Redis: " + res);
+  })
+  .catch((err) => console.log("Unable to connect to redis"));
 
 judge0Connect();
 
