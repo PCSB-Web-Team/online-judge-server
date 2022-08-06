@@ -106,8 +106,9 @@ async function generateUser(req, res) {
         phoneNumber,
       });
     }
-
+    console.log("here");
     console.log({password: password, encyptedPassword: encyptedPassword, user});
+    console.log("her1");
     //Find contest ID
     const contest = await Contest.findOne({ title: eventName });
     if (!contest) res.status(404).send("No contest exist with such name");
@@ -116,7 +117,7 @@ async function generateUser(req, res) {
 
     //Register the user to the event
     const userParticipateURL = `${process.env.callBack}/participant/`;
-
+    console.log("here2");
     axios
       .post(userParticipateURL, {
         userId: user._id,
