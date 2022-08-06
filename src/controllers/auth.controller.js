@@ -3,6 +3,7 @@ const { createToken, validateToken } = require("../middlewares/jwt");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
+const axios = require("axios");
 const Contest = require("../models/contest.model");
 
 // Login route
@@ -108,8 +109,7 @@ async function generateUser(req, res) {
       
       console.log({password: password, encyptedPassword: encyptedPassword, user});
     }
-    console.log("here");
-    console.log("her1");
+
     //Find contest ID
     const contest = await Contest.findOne({ title: eventName });
     if (!contest) res.status(404).send("No contest exist with such name");
