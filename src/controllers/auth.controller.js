@@ -3,6 +3,7 @@ const { createToken, validateToken } = require("../middlewares/jwt");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
+const Contest = require("../models/contest.model");
 
 // Login route
 async function login(req, res) {
@@ -80,8 +81,62 @@ async function profile(req, res) {
   }
 }
 
+// generate-users coming from xenia-registration
+async function generateUser(req, res) {
+  try {
+    const { email, eventName, name, phoneNumber } = req.body;
+
+    // Find user
+    let user = await User.findOne({ email });
+
+    //Create a new user if already does not exists
+    if (!user) {
+      
+      // Generate random password
+      var buf = new Uint8Array(6);
+      window.crypto.getRandomValues(buf);
+      const password = btoa(String.fromCharCode.apply(null, buf));
+
+      // Encrypting password
+      const encyptedPassword = await bcrypt.hash(password, 10);
+
+      // Creating a user
+      user = await User.create({
+        name,
+        email,
+        password: encyptedPassword,
+        phoneNumber,
+      }, { new: true });
+    }
+
+    //Find contest ID
+    const contest = await Contest.findOne({ title: eventName });
+    if (!contest) res.status(404).send("No contest exist with such name");
+
+    const contestId = contest._id;
+
+    //Register the user to the event
+    const userParticipateURL = `${process.env.callBack}/participant/`;
+
+    axios
+      .post(userParticipateURL, {
+        userId: user._id,
+        contestId: contestId,
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    return res.status(200).send("User created and registered successfully");
+
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
+
 module.exports = {
   login,
   register,
   profile,
+  generateUser,
 };
