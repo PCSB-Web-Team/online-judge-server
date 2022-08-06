@@ -104,7 +104,7 @@ async function generateUser(req, res) {
         email,
         password: encyptedPassword,
         phoneNumber,
-      }, { new: true });
+      });
     }
 
     console.log({password: password, encyptedPassword: encyptedPassword, user});
