@@ -173,7 +173,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
         $set: {
           individualScore: participant.individualScore,
           score: sum,
-          individualScore: participant.individualTime,
+          individualTime: participant.individualTime,
         },
       }
     );
