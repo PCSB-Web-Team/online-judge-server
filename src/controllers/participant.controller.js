@@ -130,12 +130,15 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
         participant.individualTime
     );
 
+    // calculating the total score
+    let sum = 0;
+    Object.values(participant.individualScore).forEach((value) => {
+      sum += parseInt(value);
+    });
+
     // checking if we need to increate the average time
     // we dont need to update the average time of the score
-    if (
-      score == participant.individualScore[questionId] &&
-      !participant.individualTime[questionId]
-    ) {
+    if (sum != participant.score) {
       console.log(
         "Updating the time for questionId: " +
           questionId +
@@ -157,12 +160,6 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
       );
       participant.averageTime = averageTime;
     }
-
-    // calculating the total score
-    let sum = 0;
-    Object.values(participant.individualScore).forEach((value) => {
-      sum += parseInt(value);
-    });
 
     // saving the updated doc to mongo
     participant.individualScore = { ...participant.individualScore };
