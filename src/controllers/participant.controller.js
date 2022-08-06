@@ -169,7 +169,13 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
 
     await Participant.updateOne(
       { _id: participant._id },
-      { $set: { individualScore: participant.individualScore, score: sum } }
+      {
+        $set: {
+          individualScore: participant.individualScore,
+          score: sum,
+          individualScore: participant.individualTime,
+        },
+      }
     );
     return console.log("Updated participant Id: " + participant._id);
   } catch (err) {
