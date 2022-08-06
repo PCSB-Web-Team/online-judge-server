@@ -36,16 +36,24 @@ async function AddParticipantFunct(userId, contestId) {
   try {
     // checking if user is present
     const user = await User.findOne({ _id: userId });
-    if (!user) return console.log("User does not exist.");
+    if (!user) {
+      console.log("User does not exist.");
+      return false;
+    }
 
     // checking if contest exists
     const contest = await Contest.findOne({ _id: contestId });
-    if (!contest) return console.log("Contest does not exist.");
+    if (!contest) {
+      console.log("Contest does not exist.");
+      return false;
+    }
 
     // checking if already registered
     const registration = await Participant.findOne({ userId, contestId });
-    if (registration)
-      return console.log("Already participated in this contest");
+    if (registration){
+      console.log("Already participated in this contest");
+      return true;
+    }
 
     // creating the new participant
     const newParticipation = await Participant.create({
@@ -53,7 +61,8 @@ async function AddParticipantFunct(userId, contestId) {
       name: user.name,
       contestId,
     });
-    return console.log("New Participant added: " + {Participant: newParticipation.name, ContestId: newParticipation.contestId});
+    console.log("New Participant added: " + {Participant: newParticipation.name, ContestId: newParticipation.contestId});
+    return true;
   } catch (err) {
     res.status(401).send(err.message);
   }
