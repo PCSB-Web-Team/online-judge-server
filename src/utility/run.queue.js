@@ -1,12 +1,20 @@
 const Bull = require("bull");
 const { runBatch } = require("./judge0");
 
-const runQueue = new Bull("run", {
-  redis: {
-    host: process.env.redisHost || "127.0.0.1",
-    port: process.env.redisPort,
-  },
-});
+const createQueue = () => {
+  try {
+    new Bull("run", {
+      redis: {
+        host: process.env.redisHost || "127.0.0.1",
+        port: process.env.redisPort,
+      },
+    });
+  } catch (err) {
+    console.log("[run.queue.js: createQueue] Error: " + err);
+  }
+};
+
+const runQueue = createQueue();
 
 var list = [];
 
