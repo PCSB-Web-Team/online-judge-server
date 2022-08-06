@@ -123,7 +123,10 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
     );
 
     console.log(
-      "Score after updating: " + participant.individualScore[questionId]
+      "Score after updating: " +
+        participant.individualScore[questionId] +
+        ", individualTime" +
+        participant.individualTime.toString()
     );
 
     // checking if we need to increate the average time
