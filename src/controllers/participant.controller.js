@@ -61,7 +61,7 @@ async function AddParticipantFunct(userId, contestId) {
       name: user.name,
       contestId,
     });
-    console.log("New Participant added: " + {Participant: newParticipation.name, ContestId: newParticipation.contestId});
+    console.log("New Participant added: " + JSON.stringify({Participant: newParticipation.name, ContestId: newParticipation.contestId}));
     return true;
   } catch (err) {
     res.status(401).send(err.message);

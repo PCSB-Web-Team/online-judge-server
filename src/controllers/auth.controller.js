@@ -107,8 +107,6 @@ async function generateUser(req, res) {
         password: encyptedPassword,
         phoneNumber,
       });
-      
-      console.log({password: password, encyptedPassword: encyptedPassword, user});
     }
 
     //Find contest ID
