@@ -105,9 +105,10 @@ async function generateUser(req, res) {
         password: encyptedPassword,
         phoneNumber,
       });
+      
+      console.log({password: password, encyptedPassword: encyptedPassword, user});
     }
     console.log("here");
-    console.log({password: password, encyptedPassword: encyptedPassword, user});
     console.log("her1");
     //Find contest ID
     const contest = await Contest.findOne({ title: eventName });
