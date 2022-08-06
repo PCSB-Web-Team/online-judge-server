@@ -119,7 +119,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
       console.log("Updating the time for questionId: "+questionId+", for user: "+userId);
       participant.individualTime[questionId] = new Date();
 
-      const averageTime = getAverageTime(Object.keys().map(key => participant.individualTime[key]));
+      const averageTime = getAverageTime(Object.keys(participant.individualTime).map(key => participant.individualTime[key]));
       console.log("Updating the average time from: "+participant.averageTime+", to "+averageTime);
       participant.averageTime = averageTime;
     }
