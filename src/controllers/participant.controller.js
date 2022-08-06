@@ -84,10 +84,14 @@ async function GetAllParticipants(req, res) {
   }
 }
 
+// get rankings or participans of a contest
 async function GetContestParticipants(req, res) {
   const { contestId } = req.params;
   try {
-    const list = await Participant.find({ contestId }).sort({ score: -1 });
+    const list = await Participant.find({ contestId }).sort({
+      score: -1,
+      averageTime: 1,
+    });
     res.send(list);
   } catch (err) {
     res.status(401).send(err.message);
