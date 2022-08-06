@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
 const axios = require("axios");
 const Contest = require("../models/contest.model");
-const {AddParticipantFunct} = require("./participant.controller")
+const { AddParticipantFunct } = require("./participant.controller");
 
 // Login route
 async function login(req, res) {
@@ -88,16 +88,15 @@ async function profile(req, res) {
 // generate-users coming from xenia-registration
 async function generateUser(req, res) {
   try {
-    const { email, eventName, name, phoneNumber } = req.body;
+    const { email, eventName, name, mobile } = req.body;
 
     // Find user
     let user = await User.findOne({ email });
 
     //Create a new user if already does not exists
     if (!user) {
-
       // Generate random password
-      const password = Math.random().toString(36).slice(2, 10)
+      const password = Math.random().toString(36).slice(2, 10);
 
       // Encrypting password
       const encyptedPassword = await bcrypt.hash(password, 10);
@@ -107,7 +106,7 @@ async function generateUser(req, res) {
         name,
         email,
         password: encyptedPassword,
-        phoneNumber,
+        phoneNumber: mobile,
       });
     }
 
@@ -120,9 +119,9 @@ async function generateUser(req, res) {
     //Register the user to the event
     var isCreated = AddParticipantFunct(user._id, contestId);
 
-    if(isCreated) return res.status(200).send("User created and registered successfully");
+    if (isCreated)
+      return res.status(200).send("User created and registered successfully");
     else return res.status(400).send("User has not been registered");
-
   } catch (err) {
     res.status(400).send(err.message);
   }
