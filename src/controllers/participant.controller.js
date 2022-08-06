@@ -103,11 +103,15 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
 
+    console.log("Score received: "+score+", Initial Score: "+participant.individualScore[questionId]);
+
     // updating the score only if the score is more than current score
     participant.individualScore[questionId] = Math.max(
       score,
       participant.individualScore[questionId] || 0
     );
+
+    console.log("Score after updating: "+participant.individualScore[questionId]);
 
     // checking if we need to increate the average time
     // we dont need to update the average time of the score 
@@ -136,6 +140,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
     );
     return console.log("Updated participant Id: " + participant._id);
   } catch (err) {
+    console.log("Error occured: "+err.message)
     return err.message;
   }
 };
@@ -157,8 +162,6 @@ async function checkParticipant(req, res) {
     res.status(401).send(err.message);
   }
 }
-
-let dateArray = [new Date('Sat Oct 15 2016 07:09:00 GMT+0800 (MYT)'), new Date('Mon Oct 17 2016 06:48:00 GMT+0800 (MYT)'), new Date('Tue Oct 18 2016 08:38:00 GMT+0800 (MYT)')];
 
 function getAverageTime(array) {
   let sum = 0;
