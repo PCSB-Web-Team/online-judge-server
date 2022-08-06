@@ -3,7 +3,7 @@ const { runBatch } = require("./judge0");
 
 const createQueue = () => {
   try {
-    new Bull("run", {
+    return new Bull("run", {
       redis: {
         host: process.env.redisHost || "127.0.0.1",
         port: process.env.redisPort,
