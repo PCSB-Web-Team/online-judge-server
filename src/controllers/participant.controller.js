@@ -2,6 +2,7 @@ const Contest = require("../models/contest.model");
 const Participant = require("../models/participants.model");
 const User = require("../models/user");
 
+//Route to register the participant directly from the platform (using route)
 async function AddParticipant(req, res) {
   const { userId, contestId } = req.body;
   try {
@@ -25,6 +26,34 @@ async function AddParticipant(req, res) {
       contestId,
     });
     res.send(newParticipation);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+}
+
+//Function to register the participant from external request (using auth/generateUser req coming from xenia register)
+async function AddParticipantFunct(userId, contestId) {
+  try {
+    // checking if user is present
+    const user = await User.findOne({ _id: userId });
+    if (!user) return console.log("User does not exist.");
+
+    // checking if contest exists
+    const contest = await Contest.findOne({ _id: contestId });
+    if (!contest) return console.log("Contest does not exist.");
+
+    // checking if already registered
+    const registration = await Participant.findOne({ userId, contestId });
+    if (registration)
+      return console.log("Already participated in this contest");
+
+    // creating the new participant
+    const newParticipation = await Participant.create({
+      userId,
+      name: user.name,
+      contestId,
+    });
+    return console.log("New Participant added: " + {Participant: newParticipation.name, ContestId: newParticipation.contestId});
   } catch (err) {
     res.status(401).send(err.message);
   }
@@ -107,6 +136,7 @@ async function checkParticipant(req, res) {
 
 module.exports = {
   AddParticipant,
+  AddParticipantFunct,
   GetContestParticipants,
   GetAllParticipants,
   UpdateScore,

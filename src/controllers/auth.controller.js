@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
 const axios = require("axios");
 const Contest = require("../models/contest.model");
+const {AddParticipantFunct} = require("./participant.controller")
 
 // Login route
 async function login(req, res) {
@@ -117,17 +118,9 @@ async function generateUser(req, res) {
     const contestId = contest._id;
 
     //Register the user to the event
-    const userParticipateURL = `${process.env.callBack}/participant/`;
-    console.log("here2");
-    axios
-      .post(userParticipateURL, {
-        userId: user._id,
-        contestId: contestId,
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
+    // const userParticipateURL = `${process.env.callBack}/participant/`;
+    AddParticipantFunct(contestId, user._id);
+    
     return res.status(200).send("User created and registered successfully");
 
   } catch (err) {
