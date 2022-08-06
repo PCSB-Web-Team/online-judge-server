@@ -1,7 +1,7 @@
 const Contest = require("../models/contest.model");
 const Participant = require("../models/participants.model");
 const User = require("../models/user");
-const moment = require("moment")
+const moment = require("moment");
 
 //Route to register the participant directly from the platform (using route)
 async function AddParticipant(req, res) {
@@ -51,7 +51,7 @@ async function AddParticipantFunct(userId, contestId) {
 
     // checking if already registered
     const registration = await Participant.findOne({ userId, contestId });
-    if (registration){
+    if (registration) {
       console.log("Already participated in this contest");
       return true;
     }
@@ -62,7 +62,13 @@ async function AddParticipantFunct(userId, contestId) {
       name: user.name,
       contestId,
     });
-    console.log("New Participant added: " + JSON.stringify({Participant: newParticipation.name, ContestId: newParticipation.contestId}));
+    console.log(
+      "New Participant added: " +
+        JSON.stringify({
+          Participant: newParticipation.name,
+          ContestId: newParticipation.contestId,
+        })
+    );
     return true;
   } catch (err) {
     res.status(401).send(err.message);
@@ -103,7 +109,12 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
 
-    console.log("Score received: "+score+", Initial Score: "+participant.individualScore[questionId]);
+    console.log(
+      "Score received: " +
+        score +
+        ", Initial Score: " +
+        participant.individualScore[questionId]
+    );
 
     // updating the score only if the score is more than current score
     participant.individualScore[questionId] = Math.max(
@@ -111,19 +122,37 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
       participant.individualScore[questionId] || 0
     );
 
-    console.log("Score after updating: "+participant.individualScore[questionId]);
+    console.log(
+      "Score after updating: " + participant.individualScore[questionId]
+    );
 
     // checking if we need to increate the average time
-    // we dont need to update the average time of the score 
-    if(score==participant.individualScore[questionId] && !participant.individualTime[questionId]){
-      console.log("Updating the time for questionId: "+questionId+", for user: "+userId);
+    // we dont need to update the average time of the score
+    if (
+      score == participant.individualScore[questionId] &&
+      !participant.individualTime[questionId]
+    ) {
+      console.log(
+        "Updating the time for questionId: " +
+          questionId +
+          ", for user: " +
+          userId
+      );
       participant.individualTime[questionId] = new Date();
 
-      const averageTime = getAverageTime(Object.keys(participant.individualTime).map(key => participant.individualTime[key]));
-      console.log("Updating the average time from: "+participant.averageTime+", to "+averageTime);
+      const averageTime = getAverageTime(
+        Object.keys(participant.individualTime).map(
+          (key) => participant.individualTime[key]
+        )
+      );
+      console.log(
+        "Updating the average time from: " +
+          participant.averageTime +
+          ", to " +
+          averageTime
+      );
       participant.averageTime = averageTime;
     }
-
 
     // calculating the total score
     let sum = 0;
@@ -140,7 +169,7 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
     );
     return console.log("Updated participant Id: " + participant._id);
   } catch (err) {
-    console.log("Error occured: "+err.message)
+    console.log("Error occured: " + err.message + err);
     return err.message;
   }
 };
@@ -165,9 +194,13 @@ async function checkParticipant(req, res) {
 
 function getAverageTime(array) {
   let sum = 0;
-  array.map(function(d) {
+  array.map(function (d) {
     let now = new Date();
-    let startDay = d.setFullYear(now.getFullYear(), now.getMonth(), now.getDate());
+    let startDay = d.setFullYear(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
     sum += startDay;
   });
 
