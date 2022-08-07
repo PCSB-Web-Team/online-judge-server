@@ -10,8 +10,7 @@ const { runCallBackQueue } = require("../utility/runCallBack.queue");
 // Note: Data received here is through PUT request on ./callback/sub by Judge0
 
 async function subCallBackHandler(req, res) {
-  // subCallBackQueue.add(req.body);
-  await submissionProcess(req.body);
+  subCallBackQueue.add(req.body);
   res.status(200).send("Success");
 }
 

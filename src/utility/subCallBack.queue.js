@@ -12,9 +12,8 @@ const subCallBackQueue = new Bull("subCallback", {
 
 // Redis Consumer : Executing after Producer adds data to queue
 const submissionProcess = async (job) => {
-  const callbackBody = job;
+  const callbackBody = job.data;
   try {
-
     // Decoding all the Base64 encoded fields
     callbackBody.stdout = Buffer.from(
       callbackBody.stdout || "",
@@ -40,7 +39,10 @@ const submissionProcess = async (job) => {
       { new: true }
     ).lean();
 
-    console.log("Call back hit", {SubmissionID: (executionBody.submissionId).toString(), Status: callbackBody.status.description} );
+    console.log("Call back hit", {
+      SubmissionID: executionBody.submissionId.toString(),
+      Status: callbackBody.status.description,
+    });
 
     // If status of submission is Accepted ( 3 ) then update score
     if (callbackBody.status.id == 3) {
@@ -57,7 +59,7 @@ const submissionProcess = async (job) => {
         updatedSubmission.questionId
       );
 
-        // Else just increase checked cases count
+      // Else just increase checked cases count
     } else {
       const updatedSubmission = await Submission.findOneAndUpdate(
         { _id: executionBody.submissionId },
@@ -72,4 +74,4 @@ const submissionProcess = async (job) => {
 
 subCallBackQueue.process(submissionProcess);
 
-module.exports = { subCallBackQueue, submissionProcess };
+module.exports = { subCallBackQueue };
