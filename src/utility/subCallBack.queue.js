@@ -70,8 +70,6 @@ const submissionProcess = async (job) => {
   }
 };
 
-subCallBackQueue.process(() => {
-  submissionProcess();
-});
+subCallBackQueue.process(submissionProcess);
 
-module.exports = { subCallBackQueue };
+module.exports = { subCallBackQueue, submissionProcess };

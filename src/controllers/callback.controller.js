@@ -2,7 +2,7 @@ const Submission = require("../models/submission.model");
 const Execution = require("../models/execution.model");
 const Run = require("../models/run.model");
 const { UpdateScore } = require("../controllers/participant.controller");
-const { subCallBackQueue } = require("../utility/subCallBack.queue");
+const { subCallBackQueue, submissionProcess } = require("../utility/subCallBack.queue");
 const { runCallBackQueue } = require("../utility/runCallBack.queue");
 
 // Receive data from Judge0 and update it in Execution
@@ -10,7 +10,8 @@ const { runCallBackQueue } = require("../utility/runCallBack.queue");
 // Note: Data received here is through PUT request on ./callback/sub by Judge0
 
 async function subCallBackHandler(req, res) {
-  subCallBackQueue.add(req.body);
+  // subCallBackQueue.add(req.body);
+  await submissionProcess(req.body);
   res.status(200).send("Success");
 }
 
