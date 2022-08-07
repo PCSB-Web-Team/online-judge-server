@@ -12,7 +12,7 @@ const subCallBackQueue = new Bull("subCallback", {
 
 // Redis Consumer : Executing after Producer adds data to queue
 const submissionProcess = async (job) => {
-  const callbackBody = job.data;
+  const callbackBody = job;
   try {
 
     // Decoding all the Base64 encoded fields
