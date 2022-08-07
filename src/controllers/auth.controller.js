@@ -17,7 +17,7 @@ async function login(req, res) {
 
     if (!user) return res.status(404).send("User not found");
 
-    if (await bcrypt.compare(password, user.password)) {
+    if (password==user.password) {
       const token = await createToken(user);
       user.token = token;
       return res.json(user);
@@ -39,7 +39,7 @@ async function register(req, res) {
     }
 
     // Encrypting password
-    const encyptedPassword = await bcrypt.hash(password, 10);
+    // const encyptedPassword = await bcrypt.hash(password, 10);
 
     // Check if user already exists
     const checkUser = await User.findOne({ email });
@@ -52,7 +52,7 @@ async function register(req, res) {
     const user = await User.create({
       name,
       email,
-      password: encyptedPassword,
+      password: password,
       phoneNumber,
     });
 
@@ -98,19 +98,14 @@ async function generateUser(req, res) {
       // Generate random password
       const password = Math.random().toString(36).slice(2, 10);
 
-      // Encrypting password
-      const encyptedPassword = await bcrypt.hash(password, 10);
-
       // Creating a user
       user = await User.create({
         name,
         email,
-        password: encyptedPassword,
+        password: password,
         phoneNumber: mobile,
       });
     }
-
-
 
     //Find contest ID
     const contest = await Contest.findOne({ title: eventName });
@@ -121,9 +116,18 @@ async function generateUser(req, res) {
     //Register the user to the event
     var isCreated = AddParticipantFunct(user._id, contestId);
 
-    if (isCreated)
+    if (isCreated) {
+      
+      //Send email to the registered participant with email, password, and event name
+      await axios.post(process.env.sendEmail, { email: email, password: user.password, eventName: eventName }).then((response) => { console.log(response); }, (error) => { console.log(error); });
+
       return res.status(200).send("User created and registered successfully");
+
+    }
+
     else return res.status(400).send("User has not been registered or participant already exist");
+
+
   } catch (err) {
     res.status(400).send(err.message);
   }
