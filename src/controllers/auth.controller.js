@@ -119,7 +119,7 @@ async function generateUser(req, res) {
     if (isCreated) {
       
       //Send email to the registered participant with email, password, and event name
-      await axios.post(process.env.sendEmail, { email: email, password: user.password, eventName: eventName }).then((response) => { console.log("Mail Sent with status: "+response.status); }, (error) => { console.log("Error while mail sending"); });
+      await axios.post(process.env.sendEmail, { email: email, password: user.password, eventName: eventName }).then((response) => { console.log(`Mail Sent to ${email} with status: `+response.status); }, (error) => { console.log("Error while mail sending"); });
 
       return res.status(200).send("User created and registered successfully");
 
