@@ -2,6 +2,7 @@ const Submission = require("../models/submission.model");
 const Question = require("../models/question.model");
 const Execution = require("../models/execution.model");
 const { produceSubmission } = require("../utility/submission.queue");
+const { submissionProcess } = require("../utility/subCallBack.queue");
 
 // This is where Judge0 will send back the status of code execution
 const subCallBackURL = `${process.env.callBack}/callback/sub`;

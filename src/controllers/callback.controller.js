@@ -2,7 +2,7 @@ const Submission = require("../models/submission.model");
 const Execution = require("../models/execution.model");
 const Run = require("../models/run.model");
 const { UpdateScore } = require("../controllers/participant.controller");
-const { subCallBackQueue } = require("../utility/subCallBack.queue");
+const { subCallBackQueue, submissionProcess } = require("../utility/subCallBack.queue");
 const { runCallBackQueue } = require("../utility/runCallBack.queue");
 
 // Receive data from Judge0 and update it in Execution

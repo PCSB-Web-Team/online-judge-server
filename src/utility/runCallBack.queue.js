@@ -4,7 +4,7 @@ const Run = require("../models/run.model");
 const runCallBackQueue = new Bull("runCallback", {
   redis: {
     host: process.env.redisHost || "127.0.0.1",
-    port: 6379,
+    port: process.env.redisPort,
   },
 });
 

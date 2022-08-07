@@ -4,7 +4,7 @@ const { submissionBatch } = require("./judge0");
 const submissionQueue = new Bull("submissions", {
   redis: {
     host: process.env.redisHost || "127.0.0.1",
-    port: 6379
+    port: process.env.redisPort
   },
 });
 

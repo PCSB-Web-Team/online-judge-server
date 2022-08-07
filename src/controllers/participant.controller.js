@@ -1,7 +1,9 @@
 const Contest = require("../models/contest.model");
 const Participant = require("../models/participants.model");
 const User = require("../models/user");
+const moment = require("moment");
 
+//Route to register the participant directly from the platform (using route)
 async function AddParticipant(req, res) {
   const { userId, contestId } = req.body;
   try {
@@ -30,6 +32,49 @@ async function AddParticipant(req, res) {
   }
 }
 
+//Function to register the participant from external request (using auth/generateUser req coming from xenia register)
+async function AddParticipantFunct(userId, contestId) {
+  try {
+    // checking if user is present
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      console.log("User does not exist.");
+      return false;
+    }
+
+    // checking if contest exists
+    const contest = await Contest.findOne({ _id: contestId });
+    if (!contest) {
+      console.log("Contest does not exist.");
+      return false;
+    }
+
+    // checking if already registered
+    const registration = await Participant.findOne({ userId, contestId });
+    if (registration) {
+      console.log("Already participated in this contest");
+      return false;
+    }
+
+    // creating the new participant
+    const newParticipation = await Participant.create({
+      userId,
+      name: user.name,
+      contestId,
+    });
+    console.log(
+      "New Participant added: " +
+        JSON.stringify({
+          Participant: newParticipation.name,
+          ContestId: newParticipation.contestId,
+        })
+    );
+    return true;
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+}
+
 async function GetAllParticipants(req, res) {
   try {
     const list = await Participant.find({});
@@ -39,10 +84,14 @@ async function GetAllParticipants(req, res) {
   }
 }
 
+// get rankings or participans of a contest
 async function GetContestParticipants(req, res) {
   const { contestId } = req.params;
   try {
-    const list = await Participant.find({ contestId }).sort({ score: -1 });
+    const list = await Participant.find({ contestId }).sort({
+      score: -1,
+      averageTime: 1,
+    });
     res.send(list);
   } catch (err) {
     res.status(401).send(err.message);
@@ -63,10 +112,26 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
 
     // update/insert the question's score
     if (!participant.individualScore) participant.individualScore = {};
+    if (!participant.individualTime) participant.individualTime = {};
 
+    console.log(
+      "Score received: " +
+        score +
+        ", Initial Score: " +
+        participant.individualScore[questionId]
+    );
+
+    // updating the score only if the score is more than current score
     participant.individualScore[questionId] = Math.max(
       score,
       participant.individualScore[questionId] || 0
+    );
+
+    console.log(
+      "Score after updating: " +
+        participant.individualScore[questionId] +
+        ", individualTime" +
+        participant.individualTime
     );
 
     // calculating the total score
@@ -75,14 +140,48 @@ const UpdateScore = async (contestId, userId, score, questionId) => {
       sum += parseInt(value);
     });
 
+    // checking if we need to increate the average time
+    // we dont need to update the average time of the score
+    if (sum != participant.score) {
+      console.log(
+        "Updating the time for questionId: " +
+          questionId +
+          ", for user: " +
+          userId
+      );
+      participant.individualTime[questionId] = new Date();
+
+      const averageTime = getAverageTime(
+        Object.keys(participant.individualTime).map(
+          (key) => participant.individualTime[key]
+        )
+      );
+      console.log(
+        "Updating the average time from: " +
+          participant.averageTime +
+          ", to " +
+          averageTime
+      );
+      participant.averageTime = averageTime;
+    }
+
     // saving the updated doc to mongo
     participant.individualScore = { ...participant.individualScore };
+
     await Participant.updateOne(
       { _id: participant._id },
-      { $set: { individualScore: participant.individualScore, score: sum } }
+      {
+        $set: {
+          individualScore: participant.individualScore,
+          score: sum,
+          individualTime: participant.individualTime,
+          averageTime: participant.averageTime,
+        },
+      }
     );
     return console.log("Updated participant Id: " + participant._id);
   } catch (err) {
+    console.log("Error occured: " + err.message + err);
     return err.message;
   }
 };
@@ -105,8 +204,24 @@ async function checkParticipant(req, res) {
   }
 }
 
+function getAverageTime(array) {
+  let sum = 0;
+  array.map(function (d) {
+    let now = new Date();
+    let startDay = d.setFullYear(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    sum += startDay;
+  });
+
+  return new Date(sum / array.length);
+}
+
 module.exports = {
   AddParticipant,
+  AddParticipantFunct,
   GetContestParticipants,
   GetAllParticipants,
   UpdateScore,

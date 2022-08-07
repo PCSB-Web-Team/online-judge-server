@@ -1,0 +1,10 @@
+rm -rf instance2359
+rm -rf instance2360
+rm -rf instance2361
+rm -rf instance2362
+rm -rf instance2363
+rm -rf instance2364
+rm -rf instance2365
+rm -rf instance2366
+rm -rf instance2367
+rm -rf instance2368
