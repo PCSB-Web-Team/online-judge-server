@@ -54,6 +54,12 @@ mv judge0-v1.13.0/docker-compose.yml judge0-v1.13.0/judge0.conf .
 rm -rf judge0-v1.13.0
 cd ..
 
+
+cd instance2366
+mv judge0-v1.13.0/docker-compose.yml judge0-v1.13.0/judge0.conf .
+rm -rf judge0-v1.13.0
+cd ..
+
 cd instance2367
 mv judge0-v1.13.0/docker-compose.yml judge0-v1.13.0/judge0.conf .
 rm -rf judge0-v1.13.0
