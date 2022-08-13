@@ -2,6 +2,8 @@ FROM node:12-alpine
 
 RUN npm i -g nodemon
 
+RUN apk --update add redis
+
 RUN mkdir /oj
 
 WORKDIR /oj
@@ -16,4 +18,4 @@ COPY . /oj
 
 EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD ["sh","-c","redis-server --daemonize yes && npm start"]
