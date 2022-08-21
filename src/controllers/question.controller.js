@@ -68,16 +68,14 @@ async function contestQuestions(req, res) {
       contestId: req.params.contestid,
     });
 
-    console.log(contestQuestions)
-    contestQuestions = contestQuestions.map(( question ) => {
-      console.log(question)
-      question.example = question.example.slice(0, 2);
-      return question;
-    });
-
     if (contestQuestions.length === 0) {
       res.status(404).send("No questions exist with this contestid");
     } else {
+      // Not sending all the testcases the frontend
+      contestQuestions = contestQuestions.map((question) => {
+        question.example = question.example.slice(0, 3);
+        return question;
+      });
       res.send(contestQuestions);
     }
   } catch (err) {
@@ -89,12 +87,15 @@ async function contestQuestions(req, res) {
 
 async function specificQuestion(req, res) {
   try {
-    const getQuestion = await Question.findOne({
+    let getQuestion = await Question.findOne({
       _id: req.params.questionid,
     });
+
     if (!getQuestion) {
       res.status(404).send("No questions exist with this questionid");
     } else {
+      // Not sending all the testcases the frontend
+      getQuestion.example = getQuestion.example.slice(0, 3);
       res.send(getQuestion);
     }
   } catch (err) {
