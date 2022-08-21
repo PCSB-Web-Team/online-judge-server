@@ -68,7 +68,9 @@ async function contestQuestions(req, res) {
       contestId: req.params.contestid,
     });
 
+    console.log(contestQuestions)
     contestQuestions = contestQuestions.map(({ question }) => {
+      console.log(question)
       question.example = question.example.slice(0, 2);
       return question;
     });
