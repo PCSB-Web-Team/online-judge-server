@@ -64,9 +64,15 @@ async function getAllQuestions(req, res) {
 
 async function contestQuestions(req, res) {
   try {
-    const contestQuestions = await Question.find({
+    let contestQuestions = await Question.find({
       contestId: req.params.contestid,
     });
+
+    contestQuestions = contestQuestions.map(({ question }) => {
+      question.example = question.example.slice(0, 2);
+      return question;
+    });
+
     if (contestQuestions.length === 0) {
       res.status(404).send("No questions exist with this contestid");
     } else {
@@ -96,10 +102,8 @@ async function specificQuestion(req, res) {
 
 async function deleteQuestion(req, res) {
   try {
-    
     await Question.findByIdAndRemove(req.params.questionid);
-    res.status(200).send("Successfully removed")
-
+    res.status(200).send("Successfully removed");
   } catch (err) {
     res.status(404).send(err.message);
   }
