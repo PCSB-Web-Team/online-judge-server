@@ -83,14 +83,8 @@ async function specificQuestion(req, res) {
     let getQuestion = await Question.findOne({
       _id: req.params.questionid,
     });
-
-    if (!getQuestion) {
-      res.status(404).send("No questions exist with this questionid");
-    } else {
-      // Not sending all the testcases the frontend
-      getQuestion.example = getQuestion.example.slice(0, 3);
-      res.send(getQuestion);
-    }
+    delete contestQuestions.example;
+    res.send(getQuestion);
   } catch (err) {
     res.status(404).send(err.message);
   }
