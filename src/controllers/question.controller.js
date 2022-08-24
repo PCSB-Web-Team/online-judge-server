@@ -68,18 +68,9 @@ async function contestQuestions(req, res) {
   try {
     let contestQuestions = await Question.find({
       contestId: req.params.contestid,
-    });
-
-    if (contestQuestions.length === 0) {
-      res.status(404).send("No questions exist with this contestid");
-    } else {
-      // Not sending all the testcases the frontend
-      contestQuestions = contestQuestions.map((question) => {
-        question.example = question.example.slice(0, 3);
-        return question;
-      });
-      res.send(contestQuestions);
-    }
+    }).lean();
+    delete contestQuestions.example;
+    res.send(contestQuestions);
   } catch (err) {
     res.status(404).send(err.message);
   }
@@ -117,7 +108,11 @@ async function deleteQuestion(req, res) {
 async function updateQuestion(req, res) {
   try {
     const { _id } = req.body;
-    const updated = await Question.findByIdAndUpdate(_id, { ...req.body }, {new: true});
+    const updated = await Question.findByIdAndUpdate(
+      _id,
+      { ...req.body },
+      { new: true }
+    );
     res.status(200).send(updated);
   } catch (err) {
     res.status(404).send(err.message);
