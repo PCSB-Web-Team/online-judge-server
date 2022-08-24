@@ -12,40 +12,46 @@ const questionSchema = new mongoose.Schema(
       required: true,
     },
     problemStatement: {
-      type: String,
+      type: [String],
       required: true,
       unique: true,
     },
     description: {
       type: String,
-      required: true,
+      default: null,
     },
     inputFormat: {
-      type: String,
+      type: [String],
       required: true,
     },
-    constraints: [{
-      type: String,
-      required: true,
-    }],
+    constraints: [
+      {
+        type: [String],
+        required: true,
+      },
+    ],
     outputFormat: {
-      type: String,
+      type: [String],
       required: true,
     },
     explanations: [
       {
-        testCase: [{type: String}],
+        testCase: [{ type: String }],
         _id: false,
       },
     ],
     samples: [
       {
-        sampleInput: [{
-          type: String,
-        }],
-        sampleOutput: [{
-          type: String,
-        }],
+        sampleInput: [
+          {
+            type: String,
+          },
+        ],
+        sampleOutput: [
+          {
+            type: String,
+          },
+        ],
         _id: false,
       },
     ],

@@ -3,7 +3,7 @@ const Question = require("../models/question.model");
 // Create a new question
 
 async function newQuestion(req, res) {
-  const {
+  const data = ({
     title,
     difficultyLevel,
     problemStatement,
@@ -18,9 +18,10 @@ async function newQuestion(req, res) {
     example,
     contestId,
     score,
-  } = req.body;
+  } = req.body);
 
   try {
+    console.log("[newQuestion] received request body: ");
     const newQuestion = await Question.create({
       title,
       difficultyLevel,
@@ -40,6 +41,7 @@ async function newQuestion(req, res) {
 
     res.send(newQuestion);
   } catch (err) {
+    console.log(err);
     res.status(400).send(err.message);
   }
 }
