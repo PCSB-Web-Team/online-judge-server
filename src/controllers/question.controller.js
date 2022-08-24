@@ -68,8 +68,7 @@ async function contestQuestions(req, res) {
   try {
     let contestQuestions = await Question.find({
       contestId: req.params.contestid,
-    }).lean();
-    delete contestQuestions.example;
+    }).select({example: 0}).lean();
     res.send(contestQuestions);
   } catch (err) {
     res.status(404).send(err.message);
@@ -82,8 +81,7 @@ async function specificQuestion(req, res) {
   try {
     let getQuestion = await Question.findOne({
       _id: req.params.questionid,
-    });
-    delete contestQuestions.example;
+    }).select({example: 0}).lean();
     res.send(getQuestion);
   } catch (err) {
     res.status(404).send(err.message);
