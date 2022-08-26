@@ -33,6 +33,16 @@ app.use(
 );
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+  console.log("Inside App use");
+  console.log(process.env.key);
+  if (req.headers.key === process.env.key) {
+    next();
+  } else {
+    res.status(400).send("Invalid api key");
+  }
+});
+
 app.use("/api", Router);
 
 let port = process.env.PORT;
