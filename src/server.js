@@ -36,6 +36,7 @@ app.use(cookieParser());
 app.use((req, res, next) => {
   console.log("Inside App use");
   console.log(process.env.key);
+  console.log(req.headers.key);
   if (req.headers.key === process.env.key) {
     next();
   } else {
