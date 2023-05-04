@@ -13,6 +13,8 @@ async function submissionBatch(data) {
       params: { base64_encoded: "true" },
       headers: {
         "content-type": "application/json",
+        'X-RapidAPI-Key': '71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a',
+        'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
       },
       data: {
         submissions: data,
@@ -54,7 +56,8 @@ async function runBatch(data) {
       params: { base64_encoded: "true" },
       headers: {
         "content-type": "application/json",
-        "x-rapidapi-key": "71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a",
+        'X-RapidAPI-Key': '71cebddde1msh53a7db127feddf7p121a46jsna2810de7d51a',
+        'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
       },
       data: {
         submissions: data,
